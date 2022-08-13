@@ -1,0 +1,34 @@
+.logo{
+    font-family: 'Rubik Maze', cursive;
+    color: chartreuse;
+    font-size: 36px;
+}
+
+body{
+    background-image: url('../images/home-bg.jpg');
+    background-size: cover;
+    
+}
+
+.main-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height:25rem;
+
+}
+
+.navbar{
+    display: flex;
+}
+
+.nav-item-left{
+    width: 25%;
+}
+
+.nav-item-right{
+    display: flex;
+    justify-content: right;
+    width: 75%;
+}
