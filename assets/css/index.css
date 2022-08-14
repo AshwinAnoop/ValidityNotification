@@ -1,3 +1,4 @@
+
 .logo{
     font-family: 'Rubik Maze', cursive;
     color: chartreuse;
@@ -5,7 +6,7 @@
 }
 
 body{
-    background-image: url('../images/home-bg.jpg');
+    background-image: url('assets/images/home-bg.jpg');
     background-size: cover;
     
 }
