@@ -1,10 +1,15 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def index(request):
-    return render(request,'index.html')
+    if request.user.is_authenticated:
+        return redirect('/home')
+    else:
+        return render(request,'index.html')
 
 def login(request):
     if request.method == 'POST':
@@ -48,6 +53,14 @@ def register(request):
         return render(request,'register.html')
     return redirect('/')
 
+@login_required
 def home(request):
     return render(request,'home.html')
 
+def logout(request):
+    auth.logout(request)
+    return redirect('/')
+
+@login_required
+def addDocs(request):
+    return render(request,'addDocs.html')

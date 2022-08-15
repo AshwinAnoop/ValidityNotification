@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<div class="add-doc card-wrapper mt-5">
+    <form class="col-5">
+        <div class="mb-3">
+            <label for="docname" class="form-label">Document Name</label>
+            <input type="text" class="form-control" id="docname">
+        </div>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Select Category</label>
+            <select class="form-select" id="category">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="doctype" class="form-label">Select Document Type</label>
+            <select class="form-select" id="doctype">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+
+
+
+
+        <div class="mb-3">
+            <label for="startdate" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="startdate">
+        </div>
+
+
+        <div class="mb-3">
+            <label for="enddate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="enddate">
+        </div>
+
+        <div class="mb-3">
+            <label for="feedback" class="form-label">Feedback</label>
+            <textarea class="form-control" id="feedback"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="uploadfiles" class="form-label">Attach Document</label>
+            <input class="form-control" type="file" id="uploadfiles" multiple>
+        </div>
+
+
+        <div class="checkbox-flex-container mb-5">
+            <div class="form-check w-25 m-3">
+                <input class="form-check-input" type="checkbox" value="" id="oneday-before">
+                <label class="form-check-label" for="oneday-before">
+                    Notify one day before expiry
+                </label>
+            </div>
+            <div class="form-check w-25 m-3">
+                <input class="form-check-input" type="checkbox" value="" id="oneweek-before">
+                <label class="form-check-label" for="oneweek-before">
+                   Notify one week before expiry
+                </label>
+            </div>
+            <div class="form-check w-25 m-3">
+                <input class="form-check-input" type="checkbox" value="" id="onemonth-before">
+                <label class="form-check-label" for="onemonth-before">
+                   Notify one month before expiry
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+{% endblock content %}

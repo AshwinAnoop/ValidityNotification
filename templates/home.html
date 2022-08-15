@@ -1,12 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    home page
-</body>
-</html>
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<div class="main-block m-5">
+
+
+    <div class="col-5 card text-white bg-dark m-5 card-wrapper">
+
+        <div>
+            <h1 class="card-title"><a href="" style="color: aliceblue;">View Docs</a> </h1>
+        </div>
+    </div>
+
+    <div class="col-5 card text-white bg-dark m-5 card-wrapper">
+
+        <div>
+            <h1 class="card-title"><a href="addDocs" style="color: aliceblue;">Add Docs</a> </h1>
+        </div>
+    </div>
+
+</div>
+    
+{% endblock content %}
+
+    

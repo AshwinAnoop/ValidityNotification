@@ -1,0 +1,21 @@
+.logo{
+  font-family: 'Rubik Maze', cursive;
+  color: chartreuse;
+  font-size: 36px;
+}
+
+.main-block{
+  display: flex;
+  width: 90%;
+  height: 30vw;
+}
+
+.card-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox-flex-container{
+  display: flex;
+}
