@@ -5,29 +5,31 @@
 
 
 <div class="add-doc card-wrapper mt-5">
-    <form class="col-5">
+    <form class="col-5" action="addDocs" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
         <div class="mb-3">
             <label for="docname" class="form-label">Document Name</label>
-            <input type="text" class="form-control" id="docname">
+            <input type="text" class="form-control" id="docname" name="docname" required>
         </div>
 
         <div class="mb-3">
             <label for="category" class="form-label">Select Category</label>
-            <select class="form-select" id="category">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+            <select class="form-select" id="category" name="category" required>
+                <option value="">Choose category</option>
+                {% for category in categories %}
+                <option value="{{category.id}}">{{category.category}} - {{category.sub_category}}</option>
+                {% endfor %}
             </select>
         </div>
 
         <div class="mb-3">
             <label for="doctype" class="form-label">Select Document Type</label>
-            <select class="form-select" id="doctype">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+            <select class="form-select" id="doctype" name="doctype" required>
+                <option value="">Choose Type of Document</option>
+                {% for doc in docu_types %}
+                <option value="{{doc.id}}">{{doc.document_type}}</option>
+                {% endfor %}
             </select>
         </div>
 
@@ -36,41 +38,41 @@
 
         <div class="mb-3">
             <label for="startdate" class="form-label">Start Date</label>
-            <input type="date" class="form-control" id="startdate">
+            <input type="date" class="form-control" id="startdate" name="startdate" required>
         </div>
 
 
         <div class="mb-3">
             <label for="enddate" class="form-label">End Date</label>
-            <input type="date" class="form-control" id="enddate">
+            <input type="date" class="form-control" id="enddate" name="enddate" required>
         </div>
 
         <div class="mb-3">
             <label for="feedback" class="form-label">Feedback</label>
-            <textarea class="form-control" id="feedback"></textarea>
+            <textarea class="form-control" id="feedback" name="feedback" ></textarea>
         </div>
 
         <div class="mb-3">
             <label for="uploadfiles" class="form-label">Attach Document</label>
-            <input class="form-control" type="file" id="uploadfiles" multiple>
+            <input class="form-control" type="file" id="uploadfiles" name="uploadfiles" multiple>
         </div>
 
 
         <div class="checkbox-flex-container mb-5">
             <div class="form-check w-25 m-3">
-                <input class="form-check-input" type="checkbox" value="" id="oneday-before">
+                <input class="form-check-input" type="checkbox" name="oneday-before" value="True" id="oneday-before">
                 <label class="form-check-label" for="oneday-before">
                     Notify one day before expiry
                 </label>
             </div>
             <div class="form-check w-25 m-3">
-                <input class="form-check-input" type="checkbox" value="" id="oneweek-before">
+                <input class="form-check-input" type="checkbox" name="oneweek-before" value="True" id="oneweek-before">
                 <label class="form-check-label" for="oneweek-before">
                    Notify one week before expiry
                 </label>
             </div>
             <div class="form-check w-25 m-3">
-                <input class="form-check-input" type="checkbox" value="" id="onemonth-before">
+                <input class="form-check-input" type="checkbox" name="onemonth-before" value="True" id="onemonth-before">
                 <label class="form-check-label" for="onemonth-before">
                    Notify one month before expiry
                 </label>

@@ -4,6 +4,7 @@ from django.db import models
 
 class Document(models.Model):
     user_id = models.IntegerField()
+    doc_name = models.CharField(max_length = 50)
     category = models.CharField(max_length = 50)
     sub_category = models.CharField(max_length = 50)
     doc_type = models.CharField(max_length = 50)
@@ -24,5 +25,11 @@ class Categories(models.Model):
     category = models.CharField(max_length=50)
     sub_category = models.CharField(max_length=50)
 
+    def __str__(self):
+        return "{} : {}".format(self.category, self.sub_category)
+
 class DocType(models.Model):
     document_type = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "{}".format(self.document_type)

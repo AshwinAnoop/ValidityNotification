@@ -1,7 +1,10 @@
+from tracemalloc import start
+from unicodedata import category
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .models import Categories,DocType, Document
 
 
 # Create your views here.
@@ -63,4 +66,45 @@ def logout(request):
 
 @login_required
 def addDocs(request):
-    return render(request,'addDocs.html')
+    #file upload not done
+    if request.method == 'POST':
+        userid = request.user.id
+        docname = request.POST['docname']
+        category_id = request.POST['category']
+        doctype_id = request.POST['doctype']
+        startdate = request.POST['startdate']
+        enddate = request.POST['enddate']
+        feedback = request.POST['feedback']
+        if 'oneday-before' in request.POST:
+            oneday_before = request.POST['oneday-before']
+        else:
+            oneday_before = False
+        if 'oneweek-before' in request.POST:
+            oneweek_before = request.POST['oneweek-before']
+        else:
+            oneweek_before = False
+        if 'onemonth-before' in request.POST:
+            onemonth_before = request.POST['onemonth-before']
+        else:
+            onemonth_before = False
+        
+        cat_obj = Categories.objects.get(id=category_id)
+        category = cat_obj.category
+        sub_category = cat_obj.sub_category
+
+        doct_obj = DocType.objects.get(id=doctype_id)
+        doc_type = doct_obj.document_type
+
+        newDoc = Document(user_id=userid,doc_name=docname,category=category,sub_category=sub_category,doc_type=doc_type,start_date=startdate,end_date=enddate,feedback=feedback,last_day=oneday_before,last_week=oneweek_before,last_month=onemonth_before)
+        newDoc.save()
+        print("successfully saved")
+
+        return redirect('viewDocs')
+    else:
+        categories = Categories.objects.all()
+        docu_types = DocType.objects.all()
+        return render(request,'addDocs.html',{'categories' : categories, 'docu_types' : docu_types})
+
+@login_required
+def viewDocs(request):
+    return render(request,'viewDocs.html')
