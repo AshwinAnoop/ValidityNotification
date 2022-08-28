@@ -107,4 +107,6 @@ def addDocs(request):
 
 @login_required
 def viewDocs(request):
-    return render(request,'viewDocs.html')
+    userid = request.user.id
+    doc_objs = Document.objects.filter(user_id=userid)
+    return render(request,'viewDocs.html',{'doc_objs':doc_objs})
