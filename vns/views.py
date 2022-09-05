@@ -4,7 +4,8 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Categories,DocType, Document
+from .models import Categories,DocType, Document,FileUploads
+from django.core.files.storage import FileSystemStorage
 
 
 # Create your views here.
@@ -75,6 +76,7 @@ def addDocs(request):
         startdate = request.POST['startdate']
         enddate = request.POST['enddate']
         feedback = request.POST['feedback']
+        uploadfile = request.FILES['uploadfiles']
         if 'oneday-before' in request.POST:
             oneday_before = request.POST['oneday-before']
         else:
@@ -95,8 +97,21 @@ def addDocs(request):
         doct_obj = DocType.objects.get(id=doctype_id)
         doc_type = doct_obj.document_type
 
-        newDoc = Document(user_id=userid,doc_name=docname,category=category,sub_category=sub_category,doc_type=doc_type,start_date=startdate,end_date=enddate,feedback=feedback,last_day=oneday_before,last_week=oneweek_before,last_month=onemonth_before)
+        newDoc = Document(user_id=userid,doc_name=docname,category=category,sub_category=sub_category,doc_type=doc_type,start_date=startdate,end_date=enddate,feedback=feedback,no_of_files=1,last_day=oneday_before,last_week=oneweek_before,last_month=onemonth_before)
         newDoc.save()
+
+        docu_id = newDoc.id
+        print(docu_id)
+
+        fss = FileSystemStorage()
+        #file = fss.save(uploadfile.name, uploadfile)
+        file = fss.save(str(docu_id)+".pdf", uploadfile)
+        file_url = fss.url(file)
+        print(file_url)
+
+        newUpload = FileUploads(docu_id=docu_id,filepath=file_url)
+        newUpload.save()
+
         print("successfully saved")
 
         return redirect('viewDocs')

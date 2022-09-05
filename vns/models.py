@@ -33,3 +33,7 @@ class DocType(models.Model):
 
     def __str__(self):
         return "{}".format(self.document_type)
+
+class FileUploads(models.Model):
+    docu_id = models.IntegerField()
+    filepath = models.CharField(max_length=250)
