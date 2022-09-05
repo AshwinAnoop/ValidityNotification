@@ -4,8 +4,9 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Categories,DocType, Document,FileUploads
+from .models import Categories,DocType, Document,FileUploads,Notification
 from django.core.files.storage import FileSystemStorage
+from datetime import datetime, timedelta
 
 
 # Create your views here.
@@ -101,16 +102,37 @@ def addDocs(request):
         newDoc.save()
 
         docu_id = newDoc.id
-        print(docu_id)
-
         fss = FileSystemStorage()
         #file = fss.save(uploadfile.name, uploadfile)
         file = fss.save(str(docu_id)+".pdf", uploadfile)
         file_url = fss.url(file)
-        print(file_url)
-
         newUpload = FileUploads(docu_id=docu_id,filepath=file_url)
         newUpload.save()
+
+        if oneday_before:
+            end_date = datetime.strptime(enddate, '%Y-%m-%d')
+            end_date = end_date.date()
+            notify1 = end_date - timedelta(hours=24)
+            if notify1 > datetime.now().date():
+                newNoti1 = Notification(doc_id=docu_id,notify_date=notify1)
+                newNoti1.save()
+
+        if oneweek_before:
+            end_date = datetime.strptime(enddate, '%Y-%m-%d')
+            end_date = end_date.date()
+            notify2 = end_date - timedelta(hours=168)
+            if notify2 > datetime.now().date():
+                newNoti2 = Notification(doc_id=docu_id,notify_date=notify2)
+                newNoti2.save()
+
+        if onemonth_before:
+            end_date = datetime.strptime(enddate, '%Y-%m-%d')
+            end_date = end_date.date()
+            notify3 = end_date - timedelta(hours=720)
+            if notify3 > datetime.now().date():
+                newNoti3 = Notification(doc_id=docu_id,notify_date=notify3)
+                newNoti3.save()
+
 
         print("successfully saved")
 
