@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+{% for docobj in doc_objs %}
+
+<section>
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-6 m-auto">
+                <h2 class="text-center mt-3 pb-3">{{docobj.doc_name}}</h2>
+
+
+
+
+
+                <!-- <div class="mb-3 ">
+                    <h3>{{docobj.doc_name}}</h3>
+                </div> -->
+
+
+                <div class="mb-3 ">
+                    <h6><b style="color: red;">Category : </b>{{docobj.category}} </h6>
+                </div>
+
+                <div class="mb-3 ">
+                    <h6><b style="color: red;">Sub Category : </b>{{docobj.sub_category}} </h6>
+                </div>
+
+                <div class="mb-3 ">
+                    <h6><b style="color: red;">Document type : </b>{{docobj.doc_type}} </h6>
+                </div>
+
+                <div class="mb-3 ">
+                    <h6><b style="color: red;">Start Date : </b>{{docobj.start_date}} </h6>
+                </div>
+
+                <div class="mb-3 ">
+                    <h6><b style="color: red;">Valid till : </b>{{docobj.end_date}} </h6>
+                </div>
+
+                <div class="mb-3 ">
+                    <h6><b style="color: red;">Other Feedbacks : </b>{{docobj.feedback}} </h6>
+                </div>
+
+
+                {% for file in fileobj %}
+
+
+                <div class="mb-3 ">
+                    <h6 class="btn btn-warning"><b style="color: red;"><a href="{{file.filepath}}" download="{{file.filepath}}">Click here to download attachments</a></b></h6>
+                </div>
+
+
+                {% endfor %}
+
+
+                <div class="mb-3 ">
+                    <h3>Notifications pending</h3>
+                </div> 
+
+
+                {% for notify in notify_objs %}
+
+                <div class="mb-3 ">
+                    <h6><b style="color: red;">{{notify.notify_date}}  </b></h6>
+                </div>
+
+                {% endfor %}
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Add Notifications
+                </button>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+{% endfor %}
+
+
+{% endblock content %}

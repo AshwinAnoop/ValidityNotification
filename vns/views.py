@@ -147,3 +147,11 @@ def viewDocs(request):
     userid = request.user.id
     doc_objs = Document.objects.filter(user_id=userid)
     return render(request,'viewDocs.html',{'doc_objs':doc_objs})
+
+@login_required
+def showDetails(request):
+    doc_id = request.GET.get('document')
+    doc_objs = Document.objects.filter(id=doc_id)
+    notify_objs = Notification.objects.filter(doc_id = doc_id)
+    fileobj = FileUploads.objects.filter(docu_id = doc_id)
+    return render(request,'showDetails.html',{'doc_objs':doc_objs,'notify_objs':notify_objs,'fileobj':fileobj})

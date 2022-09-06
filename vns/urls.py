@@ -10,4 +10,5 @@ urlpatterns = [
     path('logout',views.logout,name='logout'),
     path('addDocs',views.addDocs,name='addDocs'),
     path('viewDocs',views.viewDocs,name='viewDocs'),
+    path('showDetails/',views.showDetails, name='showDetails'),
 ]
