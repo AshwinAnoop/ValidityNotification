@@ -1,3 +1,4 @@
+from calendar import month
 from tracemalloc import start
 from unicodedata import category
 from django.shortcuts import redirect, render
@@ -155,3 +156,16 @@ def showDetails(request):
     notify_objs = Notification.objects.filter(doc_id = doc_id)
     fileobj = FileUploads.objects.filter(docu_id = doc_id)
     return render(request,'showDetails.html',{'doc_objs':doc_objs,'notify_objs':notify_objs,'fileobj':fileobj})
+
+@login_required
+def expiringDocs(request):
+    today = datetime.now().date()
+    weekdate = datetime.now().date() + timedelta(days=7)
+    monthdate = datetime.now().date() + timedelta(days=30)
+    sixmonth = datetime.now().date() + timedelta(days=183)
+
+    weekobjs = Document.objects.filter(end_date__range=[today, weekdate])
+    monthobjs = Document.objects.filter(end_date__range=[weekdate, monthdate])
+    sixmobjs = Document.objects.filter(end_date__range=[monthdate, sixmonth])
+    oneyearobjs = Document.objects.filter(end_date__gte = sixmonth)
+    return render(request,'expiringDocs.html',{'weekobjs':weekobjs,'monthobjs':monthobjs,'sixmobjs':sixmobjs,'oneyearobjs':oneyearobjs})
