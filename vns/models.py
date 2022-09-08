@@ -36,4 +36,9 @@ class DocType(models.Model):
 
 class FileUploads(models.Model):
     docu_id = models.IntegerField()
-    filepath = models.CharField(max_length=250)
+    filepath = models.CharField(max_length=250) 
+
+class Wallet(models.Model):
+    user_id = models.IntegerField()
+    amount = models.IntegerField()
+    transactdate = models.DateTimeField()

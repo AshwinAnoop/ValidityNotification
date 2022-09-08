@@ -1,0 +1,66 @@
+{% extends 'empBase.html' %}
+
+{% block content %}
+
+
+<h2 class="text-center mt-3 pb-3">Business Related Details</h2>
+
+<div>
+    {% for message in messages %}
+    <h4 class="text-danger">{{message}}</h4>
+    {% endfor %}
+</div>
+
+
+<div class="mt-5 ">
+    <div class="d-flex justify-content-center">
+        <h3>Business overview</h3>
+    </div>
+
+    <div class="card p-3 col-4 mx-auto">
+        <p> <b style="color: red;"> Username : </b>{{user.username}}</p>
+        <p> <b style="color: red;"> Email : </b>{{user.email}}</p>
+        <p> <b style="color: red;"> Business Type : </b>{{user.last_name}}</p>
+    </div>
+
+</div>
+
+<div class="mt-5 ">
+    <div class="d-flex justify-content-center">
+        <h3>Wallet Transactions</h3>
+    </div>
+
+    <div class="card p-3 col-4 mx-auto">
+
+        <table>
+            <tr>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+            {% for transact in transactions %}
+            <tr>
+                <td>{{transact.amount}}</td>
+                <td>{{transact.transactdate}} </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+<div class="mt-5 ">
+    <div class="d-flex justify-content-center">
+        <h3>Business Spends</h3>
+    </div>
+
+    <div class="card p-3 col-4 mx-auto">
+
+    </div>
+
+</div>
+
+
+
+
+
+{% endblock content %}

@@ -1,11 +1,12 @@
 from calendar import month
+import email
 from tracemalloc import start
 from unicodedata import category
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Categories,DocType, Document,FileUploads,Notification
+from .models import Categories,DocType, Document,FileUploads,Notification,Wallet
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime, timedelta
 
@@ -196,8 +197,30 @@ def addBusiness(request):
             user = User.objects.create_user(username=username,password=password,email=email,first_name=busi_type,last_name=last_name)
             user.save()
             print("user created")
+            user_id = user.id
+            time = datetime.now()
+            first_transact = Wallet(user_id=user_id,amount=1000,transactdate=time)
+            first_transact.save()
             messages.info(request,'Business added Successfully')
             return redirect('addBusiness')
 
     else:
         return render(request,'addBusiness.html')
+
+@login_required
+def businessInfo(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            user = User.objects.get(email = email)
+        except User.DoesNotExist:
+            user = None
+        if user is not None:
+            user_id = user.id
+            transactions = Wallet.objects.filter(user_id=user_id)
+            return render(request,'businessDetails.html',{'user' : user,'transactions' : transactions})
+        else:
+            messages.info(request,'No email match found')
+            return redirect('businessInfo')
+    else:
+        return render(request,'businessInfo.html')
