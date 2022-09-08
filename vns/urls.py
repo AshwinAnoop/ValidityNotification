@@ -12,4 +12,6 @@ urlpatterns = [
     path('viewDocs',views.viewDocs,name='viewDocs'),
     path('showDetails/',views.showDetails, name='showDetails'),
     path('expiringDocs',views.expiringDocs,name='expiringDocs'),
+    path('empHome',views.empHome,name='empHome'),
+    path('addBusiness',views.addBusiness,name='addBusiness'),
 ]

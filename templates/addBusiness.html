@@ -1,0 +1,42 @@
+{% extends 'empBase.html' %}
+
+
+{% block content %}
+
+<h2 class="text-center mt-3 pb-3">Add New Business</h2>
+
+<div>
+    {% for message in messages %}
+    <h4 class="text-danger">{{message}}</h4>
+    {% endfor %}
+</div>
+
+
+<div class="add-doc card-wrapper mt-5">
+    
+   
+    <form class="col-5" action="addBusiness" method="post" >
+
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">UserName</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email id</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="businessType" class="form-label">Type of Business</label>
+            <input type="text" class="form-control" id="businessType" name="businessType" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+{% endblock content %}

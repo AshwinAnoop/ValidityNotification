@@ -25,7 +25,10 @@ def login(request):
         user = auth.authenticate(username=username,password=password)
         if user is not None:
             auth.login(request,user)
-            return redirect('home')
+            if user.last_name == 'emp':
+                return redirect('empHome')
+            else:
+                return redirect('home')
         else:
             messages.info(request,'Invalid Credentials')
             return render(request,'login.html')
@@ -169,3 +172,32 @@ def expiringDocs(request):
     sixmobjs = Document.objects.filter(end_date__range=[monthdate, sixmonth])
     oneyearobjs = Document.objects.filter(end_date__gte = sixmonth)
     return render(request,'expiringDocs.html',{'weekobjs':weekobjs,'monthobjs':monthobjs,'sixmobjs':sixmobjs,'oneyearobjs':oneyearobjs})
+
+
+@login_required
+def empHome(request):
+    return render(request,'empHome.html')
+
+@login_required
+def addBusiness(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = username
+        busi_type = request.POST['businessType']
+        last_name = 'business'
+        if User.objects.filter(username=username).exists():
+            messages.info(request,'Username already taken')
+            return redirect('addBusiness')
+        elif User.objects.filter(email=email).exists():
+            messages.info(request,'Email already taken')
+            return redirect('addBusiness')
+        else:
+            user = User.objects.create_user(username=username,password=password,email=email,first_name=busi_type,last_name=last_name)
+            user.save()
+            print("user created")
+            messages.info(request,'Business added Successfully')
+            return redirect('addBusiness')
+
+    else:
+        return render(request,'addBusiness.html')
