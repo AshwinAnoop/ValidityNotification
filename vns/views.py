@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Categories,DocType, Document,FileUploads, InAppAds,Notification,Wallet,NotifyAds
+from .models import Advertisement, Categories,DocType, Document,FileUploads, InAppAds,Notification,Wallet,NotifyAds
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime, timedelta
 
@@ -236,6 +236,7 @@ def businessInfo(request):
 @login_required
 def businessHome(request):
     args = {}
+    user_id = request.user.id
     iad_count1 = InAppAds.objects.filter(ad_id1=0).count()
     iad_count2 = InAppAds.objects.filter(ad_id2=0).count()
     iad_count3 = InAppAds.objects.filter(ad_id3=0).count()
@@ -245,10 +246,59 @@ def businessHome(request):
 
     openCount = iad_count1+iad_count2+iad_count3+nad_count1+nad_count2+nad_count3
 
+    myIad_count = Advertisement.objects.filter(user_id=user_id,ad_type='inapp').count()
+    myNad_count = Advertisement.objects.filter(user_id=user_id,ad_type='notify').count()
+    total_ads = myIad_count+myNad_count
+
     args['openCount'] = openCount
+    args['Iad_count'] = myIad_count
+    args['Nad_count'] = myNad_count
+    args['total_ads'] = total_ads
 
     return render(request,'businessHome.html',{'args' : args})
 
 @login_required
 def advertiseHome(request):
     return render(request,'advertiseHome.html')
+
+@login_required
+def addIad(request):
+    if request.method == 'POST':
+        userid = request.user.id
+        ad_name = request.POST['ad_name']
+        ad_title = request.POST['ad_title']
+        ad_content = request.POST['ad_content']
+        ad_link = request.POST['ad_link']
+        newIad = Advertisement(user_id=userid,ad_name=ad_name,ad_title=ad_title,ad_content=ad_content,ad_link=ad_link,ad_type='inapp')
+        newIad.save()
+        messages.info(request,'Successfully created new ad')
+        return redirect('addIad')
+    else:
+        return render(request,'addIad.html')
+
+@login_required
+def viewIad(request):
+    user_id = request.user.id
+    ads = Advertisement.objects.filter(user_id=user_id,ad_type='inapp')
+    return render(request,'viewIad.html',{'ads':ads})
+
+@login_required
+def addNad(request):
+    if request.method == 'POST':
+        userid = request.user.id
+        ad_name = request.POST['ad_name']
+        ad_title = request.POST['ad_title']
+        ad_content = request.POST['ad_content']
+        ad_link = request.POST['ad_link']
+        newIad = Advertisement(user_id=userid,ad_name=ad_name,ad_title=ad_title,ad_content=ad_content,ad_link=ad_link,ad_type='notify')
+        newIad.save()
+        messages.info(request,'Successfully created new ad')
+        return redirect('viewNad')
+    else:
+        return render(request,'addNad.html')
+
+@login_required
+def viewNad(request):
+    user_id = request.user.id
+    ads = Advertisement.objects.filter(user_id=user_id,ad_type='notify')
+    return render(request,'viewNad.html',{'ads':ads})

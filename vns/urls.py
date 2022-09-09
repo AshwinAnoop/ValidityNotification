@@ -17,5 +17,8 @@ urlpatterns = [
     path('businessInfo',views.businessInfo,name='businessInfo'),
     path('businessHome',views.businessHome,name='businessHome'),
     path('advertiseHome',views.advertiseHome,name='advertiseHome'),
-    
+    path('addIad',views.addIad,name='addIad'),
+    path('viewIad',views.viewIad,name='viewIad'),
+    path('addNad',views.addNad,name='addNad'),
+    path('viewNad',views.viewNad,name='viewNad'),
 ]

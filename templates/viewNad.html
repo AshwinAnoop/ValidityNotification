@@ -1,0 +1,36 @@
+{% extends 'businessBase.html' %}
+
+
+{% block content %}
+
+
+<h2 class="text-center m-3 pb-3">Email Notification Advertisements</h2>
+
+<div>
+    {% for message in messages %}
+    <h4 class="text-danger">{{message}}</h4>
+    {% endfor %}
+</div>
+
+{% for ad in ads %}
+
+<div class="row">
+    <div class="card col-8 mx-auto mb-3 text-white bg-dark">
+        <div class="card-body">
+          <h5 class="card-title">{{ad.ad_name}}</h5>
+          <p class="card-text"><b>{{ad.ad_title}}</b></p>
+          <p class="card-text">{{ad.ad_content}}</p>
+        </div>
+        <div class="card-footer">
+            <a href="" class="btn btn-primary">Edit</a>
+            <a href="" class="btn btn-danger">Delete</a>
+            <a href="{{ad.ad_link}}" target="_blank" class="btn btn-warning">Redirect to link</a>
+        </div>
+      </div>
+</div>
+
+{% endfor %}
+
+
+
+{% endblock content %}

@@ -4,7 +4,7 @@
 {% block content %}
 
 
-<div class="main-block m-5 " style="height: 30vh;">
+<div class="main-block m-5 mx-auto" style="height: 30vh;">
 
 
     <div class="col-2 card text-white bg-dark m-5 card-wrapper">
@@ -17,7 +17,7 @@
     <div class="col-2 card text-white bg-dark m-5 card-wrapper ">
 
         <div>
-            <h1 class="card-title"><a href="#" style="color: aliceblue;">In-app ads</h1>
+            <h1 class="card-title"><a href="/viewIad" style="color: aliceblue;">In-app ads</h1>
         </div>
     </div>
 
@@ -40,15 +40,15 @@
 
 </div>
 
-<div class="card p-3 col-7 mx-auto">
+<div class="card p-3 col-6 mx-auto">
     <p> <b style="color: red;"> Total ads purchased : </b> xxx </p>
     <p> <b style="color: red;"> Total Money Spend : </b> xxx </p>
     <p> <b style="color: red;"> Last Month Purchase : </b> xxx </p>
     <p> <b style="color: red;"> Last Month Spends : </b> xxx </p>
     <p> <b style="color: red;"> MarketPlace Openings : </b> {{args.openCount}} </p>
-    <p> <b style="color: red;"> Active ads : </b> xxx </p>
-    <p> <b style="color: red;"> Notify ads : </b> xxx </p>
-    <p> <b style="color: red;"> In-app ads : </b> xxx </p>
+    <p> <b style="color: red;"> Active ads : </b> {{args.total_ads}} </p>
+    <p> <b style="color: red;"> Notify ads : </b> {{args.Nad_count}} </p>
+    <p> <b style="color: red;"> In-app ads : </b> {{args.Iad_count}} </p>
 </div>
    
 
