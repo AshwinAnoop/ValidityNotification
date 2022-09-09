@@ -1,14 +1,12 @@
-from calendar import month
-import email
-from tracemalloc import start
-from unicodedata import category
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Advertisement, Categories,DocType, Document,FileUploads, InAppAds,Notification,Wallet,NotifyAds
+from .models import Advertisement, Categories,DocType, Document,FileUploads, InAppAds,Notification,Wallet,NotifyAds, WalletBalance
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime, timedelta
+import stripe #to use stripe as payment gateway
+from django.conf import settings
 
 
 # Create your views here.
@@ -208,6 +206,8 @@ def addBusiness(request):
             time = datetime.now()
             first_transact = Wallet(user_id=user_id,amount=1000,transactdate=time)
             first_transact.save()
+            updateBalance = WalletBalance(user_id=user_id,balance=1000)
+            updateBalance.save()
             messages.info(request,'Business added Successfully')
             return redirect('addBusiness')
 
@@ -302,3 +302,56 @@ def viewNad(request):
     user_id = request.user.id
     ads = Advertisement.objects.filter(user_id=user_id,ad_type='notify')
     return render(request,'viewNad.html',{'ads':ads})
+
+@login_required
+def wallet(request):
+    args = {}
+    user_id = request.user.id
+    balance = WalletBalance.objects.get(user_id=user_id).balance
+    args['balance'] = balance
+    transacts = Wallet.objects.filter(user_id=user_id).order_by('-id')
+    return render(request,'wallet.html',{'args' : args,'transacts' : transacts})
+
+@login_required
+def addMoney(request):
+    if request.method == 'POST':
+        amountvar = request.POST['cash']
+        request.session["paynow"]=amountvar
+        return redirect('checkout')   
+    else:
+        return render(request,'addMoney.html')
+
+@login_required
+def checkout(request):
+    if request.method == 'POST':
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        amountvar = request.session['paynow']
+        transactdate = datetime.now()
+        stripe_total = int(amountvar) * 100
+        userid = request.user.id
+        currbalance = WalletBalance.objects.get(user_id=userid).balance
+
+        token = request.POST['stripeToken']
+        email = request.POST['stripeEmail']
+        customer = stripe.Customer.create(email=email,source=token)
+        charge = stripe.Charge.create(amount=stripe_total,currency="inr",customer=customer.id)
+
+
+        newbalance = int(currbalance) + int(amountvar)
+
+        editbalance = WalletBalance.objects.get(user_id=userid) 
+        editbalance.balance = newbalance
+        editbalance.save();
+        addobj = Wallet(amount=amountvar,user_id=userid,transactdate=transactdate)
+        addobj.save();
+        request.session["walletbalance"]=newbalance
+
+        messages.info(request,'Deposit successful')
+        return redirect('wallet')   
+
+    else:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        data_key = settings.STRIPE_PUBLISHABLE_KEY
+        amountvar = request.session['paynow']
+        stripe_total = int(amountvar) * 100
+        return render(request,'checkout.html',{'data_key' : data_key, 'stripe_total' : stripe_total})

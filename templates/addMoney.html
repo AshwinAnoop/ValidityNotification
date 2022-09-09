@@ -1,0 +1,43 @@
+{% extends 'businessBase.html' %}
+
+
+{%  block content %}
+
+<section>
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-6 m-auto">
+                <h2 class="text-center mt-3 pb-3">Wallet <i class="fa fa-long-arrow-right " style="font-size:38px;color:red"></i>  Add Money</h2>
+
+
+                <form action="/addMoney" method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3 ">
+                        <label class="form-label">AMOUNT</label>
+                        <input type="number" class="form-control" name="cash" placeholder="Enter amount you wish to add">
+                    </div>
+<br>
+
+                        
+
+                        <div class="mt-3 mb-3 ">
+                            <button type="submit" class="btn btn-primary justify-content-end">Add money</button>
+                        </div>
+                        </form>
+
+                    <div>
+                        {% for message in messages %}
+                        <h3 style="color:Tomato;">{{message}}</h3>
+                        {% endfor %}
+                    </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

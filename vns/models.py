@@ -67,3 +67,7 @@ class NotifyAds(models.Model):
     ad_id1 = models.IntegerField(default=0)
     ad_id2 = models.IntegerField(default=0)
     ad_id3 = models.IntegerField(default=0)
+
+class WalletBalance(models.Model):
+    user_id = models.IntegerField()
+    balance = models.IntegerField()

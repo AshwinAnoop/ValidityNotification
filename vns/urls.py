@@ -21,4 +21,7 @@ urlpatterns = [
     path('viewIad',views.viewIad,name='viewIad'),
     path('addNad',views.addNad,name='addNad'),
     path('viewNad',views.viewNad,name='viewNad'),
+    path('wallet',views.wallet,name='wallet'),
+    path('addMoney',views.addMoney,name='addMoney'),
+    path('checkout',views.checkout, name='checkout'),
 ]
