@@ -42,3 +42,28 @@ class Wallet(models.Model):
     user_id = models.IntegerField()
     amount = models.IntegerField()
     transactdate = models.DateTimeField()
+
+class Advertisement(models.Model):
+    user_id = models.IntegerField()
+    ad_name = models.CharField(max_length=50)
+    ad_title = models.CharField(max_length=50)
+    ad_content = models.CharField(max_length=100)
+    ad_link = models.CharField(max_length=100)
+    ad_type = models.CharField(max_length=50)
+    noOfClicks = models.IntegerField(default=0)
+
+class InAppAds(models.Model):
+    doc_id = models.IntegerField()
+    category = models.CharField(max_length=50)
+    sub_category = models.CharField(max_length=50)
+    ad_id1 = models.IntegerField(default=0)
+    ad_id2 = models.IntegerField(default=0)
+    ad_id3 = models.IntegerField(default=0)
+
+class NotifyAds(models.Model):
+    doc_id = models.IntegerField()
+    category = models.CharField(max_length=50)
+    sub_category = models.CharField(max_length=50)
+    ad_id1 = models.IntegerField(default=0)
+    ad_id2 = models.IntegerField(default=0)
+    ad_id3 = models.IntegerField(default=0)

@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Categories,DocType, Document,FileUploads,Notification,Wallet
+from .models import Categories,DocType, Document,FileUploads, InAppAds,Notification,Wallet,NotifyAds
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime, timedelta
 
@@ -28,6 +28,8 @@ def login(request):
             auth.login(request,user)
             if user.last_name == 'emp':
                 return redirect('empHome')
+            elif user.last_name == 'business':
+                return redirect('businessHome')
             else:
                 return redirect('home')
         else:
@@ -138,6 +140,11 @@ def addDocs(request):
                 newNoti3 = Notification(doc_id=docu_id,notify_date=notify3)
                 newNoti3.save()
 
+        newInappAd = InAppAds(doc_id=docu_id,category=category,sub_category=sub_category)
+        newInappAd.save()
+        newNotiAd = NotifyAds(doc_id=docu_id,category=category,sub_category=sub_category)
+        newNotiAd.save()
+
 
         print("successfully saved")
 
@@ -168,10 +175,10 @@ def expiringDocs(request):
     monthdate = datetime.now().date() + timedelta(days=30)
     sixmonth = datetime.now().date() + timedelta(days=183)
 
-    weekobjs = Document.objects.filter(end_date__range=[today, weekdate])
-    monthobjs = Document.objects.filter(end_date__range=[weekdate, monthdate])
-    sixmobjs = Document.objects.filter(end_date__range=[monthdate, sixmonth])
-    oneyearobjs = Document.objects.filter(end_date__gte = sixmonth)
+    weekobjs = Document.objects.filter(end_date__range=[today, weekdate]).order_by('end_date')
+    monthobjs = Document.objects.filter(end_date__range=[weekdate, monthdate]).order_by('end_date')
+    sixmobjs = Document.objects.filter(end_date__range=[monthdate, sixmonth]).order_by('end_date')
+    oneyearobjs = Document.objects.filter(end_date__gte = sixmonth).order_by('end_date')
     return render(request,'expiringDocs.html',{'weekobjs':weekobjs,'monthobjs':monthobjs,'sixmobjs':sixmobjs,'oneyearobjs':oneyearobjs})
 
 
@@ -224,3 +231,24 @@ def businessInfo(request):
             return redirect('businessInfo')
     else:
         return render(request,'businessInfo.html')
+
+
+@login_required
+def businessHome(request):
+    args = {}
+    iad_count1 = InAppAds.objects.filter(ad_id1=0).count()
+    iad_count2 = InAppAds.objects.filter(ad_id2=0).count()
+    iad_count3 = InAppAds.objects.filter(ad_id3=0).count()
+    nad_count1 = NotifyAds.objects.filter(ad_id1=0).count()
+    nad_count2 = NotifyAds.objects.filter(ad_id2=0).count()
+    nad_count3 = NotifyAds.objects.filter(ad_id3=0).count()
+
+    openCount = iad_count1+iad_count2+iad_count3+nad_count1+nad_count2+nad_count3
+
+    args['openCount'] = openCount
+
+    return render(request,'businessHome.html',{'args' : args})
+
+@login_required
+def advertiseHome(request):
+    return render(request,'advertiseHome.html')

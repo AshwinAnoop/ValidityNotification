@@ -15,5 +15,7 @@ urlpatterns = [
     path('empHome',views.empHome,name='empHome'),
     path('addBusiness',views.addBusiness,name='addBusiness'),
     path('businessInfo',views.businessInfo,name='businessInfo'),
-    # path('businessDetails',views.businessDetails,name='businessDetails'),
+    path('businessHome',views.businessHome,name='businessHome'),
+    path('advertiseHome',views.advertiseHome,name='advertiseHome'),
+    
 ]
