@@ -56,6 +56,7 @@ class InAppAds(models.Model):
     doc_id = models.IntegerField()
     category = models.CharField(max_length=50)
     sub_category = models.CharField(max_length=50)
+    doc_type = models.CharField(max_length=50,null=True)
     ad_id1 = models.IntegerField(default=0)
     ad_id2 = models.IntegerField(default=0)
     ad_id3 = models.IntegerField(default=0)
@@ -64,6 +65,7 @@ class NotifyAds(models.Model):
     doc_id = models.IntegerField()
     category = models.CharField(max_length=50)
     sub_category = models.CharField(max_length=50)
+    doc_type = models.CharField(max_length=50,null=True)
     ad_id1 = models.IntegerField(default=0)
     ad_id2 = models.IntegerField(default=0)
     ad_id3 = models.IntegerField(default=0)
@@ -71,3 +73,5 @@ class NotifyAds(models.Model):
 class WalletBalance(models.Model):
     user_id = models.IntegerField()
     balance = models.IntegerField()
+    total_ads = models.IntegerField(default=0)
+    total_spend = models.IntegerField(default=0)

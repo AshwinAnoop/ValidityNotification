@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
@@ -168,15 +169,16 @@ def showDetails(request):
 
 @login_required
 def expiringDocs(request):
+    user_id = request.user.id
     today = datetime.now().date()
     weekdate = datetime.now().date() + timedelta(days=7)
     monthdate = datetime.now().date() + timedelta(days=30)
     sixmonth = datetime.now().date() + timedelta(days=183)
 
-    weekobjs = Document.objects.filter(end_date__range=[today, weekdate]).order_by('end_date')
-    monthobjs = Document.objects.filter(end_date__range=[weekdate, monthdate]).order_by('end_date')
-    sixmobjs = Document.objects.filter(end_date__range=[monthdate, sixmonth]).order_by('end_date')
-    oneyearobjs = Document.objects.filter(end_date__gte = sixmonth).order_by('end_date')
+    weekobjs = Document.objects.filter(user_id=user_id,end_date__range=[today, weekdate]).order_by('end_date')
+    monthobjs = Document.objects.filter(user_id=user_id,end_date__range=[weekdate, monthdate]).order_by('end_date')
+    sixmobjs = Document.objects.filter(user_id=user_id,end_date__range=[monthdate, sixmonth]).order_by('end_date')
+    oneyearobjs = Document.objects.filter(user_id=user_id,end_date__gte = sixmonth).order_by('end_date')
     return render(request,'expiringDocs.html',{'weekobjs':weekobjs,'monthobjs':monthobjs,'sixmobjs':sixmobjs,'oneyearobjs':oneyearobjs})
 
 
@@ -250,10 +252,19 @@ def businessHome(request):
     myNad_count = Advertisement.objects.filter(user_id=user_id,ad_type='notify').count()
     total_ads = myIad_count+myNad_count
 
+    user_id = request.user.id
+    balance = WalletBalance.objects.get(user_id=user_id).balance
+    total_purchase = WalletBalance.objects.get(user_id=user_id).total_ads
+    total_spend = WalletBalance.objects.get(user_id=user_id).total_spend
+
     args['openCount'] = openCount
     args['Iad_count'] = myIad_count
     args['Nad_count'] = myNad_count
     args['total_ads'] = total_ads
+    args['balance'] = balance
+    args['total_purchase'] = total_purchase
+    args['total_spend'] = total_spend
+
 
     return render(request,'businessHome.html',{'args' : args})
 
@@ -355,3 +366,63 @@ def checkout(request):
         amountvar = request.session['paynow']
         stripe_total = int(amountvar) * 100
         return render(request,'checkout.html',{'data_key' : data_key, 'stripe_total' : stripe_total})
+
+@login_required
+def marketHome(request):
+    return render(request,'marketHome.html')
+
+@login_required
+def iCategoryslots(request):
+
+    user_id = request.user.id
+
+    categoryOpen3_query = InAppAds.objects.filter(ad_id3=0).values_list('category',flat=True).distinct()
+    categoryOpen3 = list(categoryOpen3_query)
+    cobj3 = {}
+    for x in categoryOpen3:
+        cat_count = InAppAds.objects.filter(ad_id3=0,category=x).count()
+        cobj3[x] = cat_count
+
+    
+    ads = Advertisement.objects.filter(user_id=user_id,ad_type='inapp')
+
+    return render(request,'iCategoryslots.html',{'cobj3' : cobj3,'ads' : ads})
+
+@login_required
+def purchaseICslots(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    category = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id3=0,category=category).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iCategoryslots')
+    elif currbalance < slots:
+        messages.info(request,'Balance too low')
+        return redirect('iCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id3=0,category=category)
+        newbalance = currbalance - slots
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots
+        total_ads = curr_purchase+n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id3 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        print("slots purchased")
+        return redirect('iCategoryslots')

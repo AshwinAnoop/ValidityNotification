@@ -24,4 +24,7 @@ urlpatterns = [
     path('wallet',views.wallet,name='wallet'),
     path('addMoney',views.addMoney,name='addMoney'),
     path('checkout',views.checkout, name='checkout'),
+    path('marketHome',views.marketHome, name='marketHome'),
+    path('iCategoryslots',views.iCategoryslots, name='iCategoryslots'),
+    path('purchaseICslots',views.purchaseICslots, name='purchaseICslots'),
 ]

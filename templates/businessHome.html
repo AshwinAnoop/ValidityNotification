@@ -25,7 +25,7 @@
     <div class="col-2 card text-white bg-dark m-5 card-wrapper">
 
         <div>
-            <h1 class="card-title"><a href="#" style="color: aliceblue;">Notify ads</a> </h1>
+            <h1 class="card-title"><a href="/viewNad" style="color: aliceblue;">Notify ads</a> </h1>
         </div>
     </div>
 
@@ -41,10 +41,9 @@
 </div>
 
 <div class="card p-3 col-6 mx-auto">
-    <p> <b style="color: red;"> Total ads purchased : </b> xxx </p>
-    <p> <b style="color: red;"> Total Money Spend : </b> xxx </p>
-    <p> <b style="color: red;"> Last Month Purchase : </b> xxx </p>
-    <p> <b style="color: red;"> Last Month Spends : </b> xxx </p>
+    <p> <b style="color: red;"> Total ads purchased : </b> {{args.total_purchase}} </p>
+    <p> <b style="color: red;"> Total Money Spend : </b> {{args.total_spend}} </p>
+    <p> <b style="color: red;"> Current Wallet Balance : </b> {{args.balance}} </p>
     <p> <b style="color: red;"> MarketPlace Openings : </b> {{args.openCount}} </p>
     <p> <b style="color: red;"> Active ads : </b> {{args.total_ads}} </p>
     <p> <b style="color: red;"> Notify ads : </b> {{args.Nad_count}} </p>
