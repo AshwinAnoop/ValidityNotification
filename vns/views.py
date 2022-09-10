@@ -376,6 +376,20 @@ def iCategoryslots(request):
 
     user_id = request.user.id
 
+    categoryOpen1_query = InAppAds.objects.filter(ad_id1=0).values_list('category',flat=True).distinct()
+    categoryOpen1 = list(categoryOpen1_query)
+    cobj1 = {}
+    for x in categoryOpen1:
+        cat_count = InAppAds.objects.filter(ad_id1=0,category=x).count()
+        cobj1[x] = cat_count
+
+    categoryOpen2_query = InAppAds.objects.filter(ad_id2=0).values_list('category',flat=True).distinct()
+    categoryOpen2 = list(categoryOpen2_query)
+    cobj2 = {}
+    for x in categoryOpen2:
+        cat_count = InAppAds.objects.filter(ad_id2=0,category=x).count()
+        cobj2[x] = cat_count
+
     categoryOpen3_query = InAppAds.objects.filter(ad_id3=0).values_list('category',flat=True).distinct()
     categoryOpen3 = list(categoryOpen3_query)
     cobj3 = {}
@@ -386,10 +400,101 @@ def iCategoryslots(request):
     
     ads = Advertisement.objects.filter(user_id=user_id,ad_type='inapp')
 
-    return render(request,'iCategoryslots.html',{'cobj3' : cobj3,'ads' : ads})
+    return render(request,'iCategoryslots.html',{'cobj1' : cobj1,'cobj2' : cobj2,'cobj3' : cobj3,'ads' : ads})
 
 @login_required
-def purchaseICslots(request):
+def purchaseICslot1(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    category = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id1=0,category=category).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iCategoryslots')
+    elif currbalance < (slots*3):
+        messages.info(request,'Balance too low')
+        return redirect('iCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id1=0,category=category)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - (slots*3)
+        print(slots*3)
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots*3
+        total_ads = curr_purchase + n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id1 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        return redirect('iCategoryslots')
+
+
+
+@login_required
+def purchaseICslot2(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    category = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id2=0,category=category).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iCategoryslots')
+    elif currbalance < (slots*3):
+        messages.info(request,'Balance too low')
+        return redirect('iCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id2=0,category=category)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - (slots*2)
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots*2
+        total_ads = curr_purchase + n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id2 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        return redirect('iCategoryslots')
+
+@login_required
+def purchaseICslot3(request):
     user_id = request.user.id
     ad_id = request.POST['ad']
     category = request.POST['category']
@@ -404,6 +509,10 @@ def purchaseICslots(request):
         return redirect('iCategoryslots')
     else:
         adobjs = InAppAds.objects.filter(ad_id3=0,category=category)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
         newbalance = currbalance - slots
         curr_data = WalletBalance.objects.get(user_id=user_id)
         curr_purchase = curr_data.total_ads
@@ -424,5 +533,6 @@ def purchaseICslots(request):
         curr_data.total_ads = total_ads
         curr_data.total_spend = total_spend
         curr_data.save()
+        ad_details.save()
         print("slots purchased")
         return redirect('iCategoryslots')

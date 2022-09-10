@@ -25,11 +25,50 @@
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                 data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse
-                    plugin adds the appropriate classes that we use to style each element. These classes control the
-                    overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of
-                    this with custom CSS or overriding our default variables. It's also worth noting that just about any
-                    HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    <div class="add-doc card-wrapper mt-5">
+                        <form class="col-5" action="purchaseICslot1" method="post">
+
+                            {% csrf_token %}
+
+
+                            <div class="mb-3">
+                                <label for="ad" class="form-label">Choose Ad</label>
+                                <select class="form-select" id="ad" name="ad" required>
+                                    <option value="">Select Ad to Publish</option>
+                                    {% for ad in ads %}
+                                    <option value="{{ad.id}}">{{ad.ad_name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+                                <label for="category" class="form-label">View Category wise availability</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Choose category</option>
+                                    {% for key, value in cobj1.items %}
+                                    <option value="{{ key }}">{{ key }} - Slots Available : {{ value }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+
+                            <div class="mb-3">
+                                <label for="noofslots" class="form-label">No of Slots to purchase</label>
+                                <input type="number" class="form-control" id="noofslots" name="noofslots" required>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary">Purchase</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,12 +84,50 @@
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                 data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                    collapse plugin adds the appropriate classes that we use to style each element. These classes
-                    control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                    modify any of this with custom CSS or overriding our default variables. It's also worth noting that
-                    just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit
-                    overflow.
+                    <div class="add-doc card-wrapper mt-5">
+                        <form class="col-5" action="purchaseICslot2" method="post">
+
+                            {% csrf_token %}
+
+
+                            <div class="mb-3">
+                                <label for="ad" class="form-label">Choose Ad</label>
+                                <select class="form-select" id="ad" name="ad" required>
+                                    <option value="">Select Ad to Publish</option>
+                                    {% for ad in ads %}
+                                    <option value="{{ad.id}}">{{ad.ad_name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+                                <label for="category" class="form-label">View Category wise availability</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Choose category</option>
+                                    {% for key, value in cobj2.items %}
+                                    <option value="{{ key }}">{{ key }} - Slots Available : {{ value }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+
+                            <div class="mb-3">
+                                <label for="noofslots" class="form-label">No of Slots to purchase</label>
+                                <input type="number" class="form-control" id="noofslots" name="noofslots" required>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary">Purchase</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,7 +147,7 @@
 
 
                     <div class="add-doc card-wrapper mt-5">
-                        <form class="col-5" action="purchaseICslots" method="post" enctype="multipart/form-data">
+                        <form class="col-5" action="purchaseICslot3" method="post">
 
                             {% csrf_token %}
 

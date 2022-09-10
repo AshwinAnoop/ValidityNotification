@@ -26,5 +26,8 @@ urlpatterns = [
     path('checkout',views.checkout, name='checkout'),
     path('marketHome',views.marketHome, name='marketHome'),
     path('iCategoryslots',views.iCategoryslots, name='iCategoryslots'),
-    path('purchaseICslots',views.purchaseICslots, name='purchaseICslots'),
+    path('purchaseICslot1',views.purchaseICslot1, name='purchaseICslot1'),
+    path('purchaseICslot2',views.purchaseICslot2, name='purchaseICslot2'),
+    path('purchaseICslot3',views.purchaseICslot3, name='purchaseICslot3'),
+    
 ]
