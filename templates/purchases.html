@@ -1,0 +1,66 @@
+{% extends 'businessBase.html' %}
+
+
+{% block content %}
+
+
+<section>
+
+    <h2 class="text-center mt-3 pb-3">Purchases</h2>
+
+
+    <div>
+        {% for message in messages %}
+        <h3 style="color:Tomato;">{{message}}</h3>
+        {% endfor %}
+    </div>
+
+    
+    <div class="container mt-5">
+        <div class="row">
+
+            <table class="table table-hover table-dark">
+                <thead>
+                  <tr>
+                    
+                    <th scope="col"><b style="color: yellow;">Ad Name </b></th>
+                    <th scope="col"><b style="color: yellow;">Ad Type </b></th>
+                    <th scope="col"><b style="color: yellow;">Total Purchases </b></th>
+                    <th scope="col"><b style="color: yellow;">Total Spend </b></th>
+
+
+                  </tr>     
+                </thead>
+                <tbody>
+
+                {% for purchase in purchaseobjs %}
+                
+                  <tr>
+                    
+
+                    <td>{{purchase.ad_name}} </td>
+                    {% if purchase.ad_type == 'inapp' %}
+                    <td><b style="color: crimson;">In App Notification</b></td>
+                    {% else %}
+                    <td><b style="color: chartreuse;">Email Notification</b></td>
+                    {% endif %}
+                    <td>{{purchase.publish_count}}</td>
+                    <td>{{purchase.amount_spend}}</td>
+
+
+
+                  </tr>
+
+                {% endfor %}
+                </tbody>
+              </table>
+
+        </div>
+    </div>
+
+
+</section>
+
+   
+
+{% endblock content %}

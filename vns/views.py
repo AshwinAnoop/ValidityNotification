@@ -567,3 +567,54 @@ def purchaseICslot3(request):
         print("slots purchased")
         messages.info(request,'slots purchased')
         return redirect('iCategoryslots')
+
+@login_required
+def purchases(request):
+    user_id = request.user.id
+    purchaseobjs = Advertisement.objects.filter(user_id=user_id).order_by('-publish_count')
+    return render(request,'purchases.html',{'purchaseobjs' : purchaseobjs})
+
+@login_required
+def businessReport(request):
+    user_id = request.user.id
+    purchaseobjs = Advertisement.objects.filter(user_id=user_id).order_by('-publish_count')
+    expendobjs = Advertisement.objects.filter(user_id=user_id).order_by('-amount_spend')
+    inappobjs = Advertisement.objects.filter(user_id=user_id,ad_type='inapp').order_by('-publish_count')
+    emailobjs = Advertisement.objects.filter(user_id=user_id,ad_type='notify').order_by('-publish_count')
+
+    all_ads = list(Advertisement.objects.filter(user_id=user_id).values_list('id',flat=True))
+    allcats = list(InAppAds.objects.filter(ad_id1__in = all_ads).values_list('category',flat=True).distinct() | InAppAds.objects.filter(ad_id2__in = all_ads).values_list('category',flat=True).distinct() | InAppAds.objects.filter(ad_id3__in = all_ads).values_list('category',flat=True).distinct())
+
+    cat_reportobjs = {}
+
+    for cat in allcats:
+        scount1 = InAppAds.objects.filter(category=cat,ad_id1__in = all_ads).count()
+        scount2 = InAppAds.objects.filter(category=cat,ad_id2__in = all_ads).count()
+        scount3 = InAppAds.objects.filter(category=cat,ad_id3__in = all_ads).count()
+        totalslots = scount1+scount2+scount3
+        arr = [scount1,scount2,scount3,totalslots]
+        cat_reportobjs[cat] = arr
+    
+    allsubcats = list(InAppAds.objects.filter(ad_id1__in = all_ads).values_list('sub_category',flat=True).distinct() | InAppAds.objects.filter(ad_id2__in = all_ads).values_list('sub_category',flat=True).distinct() | InAppAds.objects.filter(ad_id3__in = all_ads).values_list('sub_category',flat=True).distinct())
+    
+    subcat_reportobjs = {}
+
+    for subcat in allsubcats:
+        scount1 = InAppAds.objects.filter(sub_category=subcat,ad_id1__in = all_ads).count()
+        scount2 = InAppAds.objects.filter(sub_category=subcat,ad_id2__in = all_ads).count()
+        scount3 = InAppAds.objects.filter(sub_category=subcat,ad_id3__in = all_ads).count()
+        totalslots = scount1+scount2+scount3
+        arr = [scount1,scount2,scount3,totalslots]
+        subcat_reportobjs[subcat] = arr
+
+
+
+    context = {
+        'purchaseobjs' : purchaseobjs,
+        'expendobjs' : expendobjs,
+        'inappobjs' : inappobjs,
+        'emailobjs' : emailobjs,
+        'cat_reportobjs' : cat_reportobjs,
+        'subcat_reportobjs' : subcat_reportobjs,
+    }
+    return render(request,'businessReport.html',context)

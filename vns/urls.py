@@ -29,5 +29,7 @@ urlpatterns = [
     path('purchaseICslot1',views.purchaseICslot1, name='purchaseICslot1'),
     path('purchaseICslot2',views.purchaseICslot2, name='purchaseICslot2'),
     path('purchaseICslot3',views.purchaseICslot3, name='purchaseICslot3'),
+    path('purchases',views.purchases, name='purchases'),
+    path('businessReport',views.businessReport, name='businessReport'),
     
 ]
