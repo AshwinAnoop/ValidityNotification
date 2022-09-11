@@ -8,8 +8,9 @@
 <section>
     <div class="container ">
         <div class="row">
+            <h2 class="text-center mt-3 pb-3">{{docobj.doc_name}}</h2>
             <div class="col-md-6 m-auto">
-                <h2 class="text-center mt-3 pb-3">{{docobj.doc_name}}</h2>
+               
 
 
 
@@ -78,6 +79,52 @@
 
 
             </div>
+
+            {% if adobj1 or adobj2 or adobj3 %}
+
+            <div class="col-3 m-auto">
+                <h3 class="text-center mt-3 pb-3">Smart Suggestions</h3>
+
+                {% if adobj1 %}
+                <div class="card mb-2 w-100">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ adobj1.ad_title }}</h5>
+                      <p class="card-text">{{ adobj1.ad_content }}</p>
+                      <a href="{{ adobj1.ad_link }}" target="_blank" class="btn btn-primary">Know More</a>
+                    </div>
+                </div>
+
+                {% endif %}
+
+                {% if adobj2 %}
+                <div class="card mb-2 ">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ adobj2.ad_title }}</h5>
+                      <p class="card-text">{{ adobj2.ad_content }}</p>
+                      <a href="{{ adobj2.ad_link }}" target="_blank" class="btn btn-primary">Know More</a>
+                    </div>
+                </div>
+
+                {% endif %}
+
+                {% if adobj3 %}
+                <div class="card mb-2 ">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ adobj3.ad_title }}</h5>
+                      <p class="card-text">{{ adobj3.ad_content }}</p>
+                      <a href="{{ adobj3.ad_link }}" target="_blank" class="btn btn-primary">Know More</a>
+                    </div>
+                </div>
+
+                {% endif %}
+
+
+
+            </div>
+
+            {% endif %}
+
+
         </div>
     </div>
 </section>

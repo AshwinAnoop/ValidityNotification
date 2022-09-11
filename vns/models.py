@@ -52,6 +52,7 @@ class Advertisement(models.Model):
     ad_type = models.CharField(max_length=50)
     noOfClicks = models.IntegerField(default=0)
     publish_count = models.IntegerField(default=0)
+    amount_spend = models.IntegerField(default=0)
 
 class InAppAds(models.Model):
     doc_id = models.IntegerField()

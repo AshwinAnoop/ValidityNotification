@@ -165,7 +165,27 @@ def showDetails(request):
     doc_objs = Document.objects.filter(id=doc_id)
     notify_objs = Notification.objects.filter(doc_id = doc_id)
     fileobj = FileUploads.objects.filter(docu_id = doc_id)
-    return render(request,'showDetails.html',{'doc_objs':doc_objs,'notify_objs':notify_objs,'fileobj':fileobj})
+    ad_id1 = InAppAds.objects.get(doc_id = doc_id).ad_id1
+    ad_id2 = InAppAds.objects.get(doc_id = doc_id).ad_id2
+    ad_id3 = InAppAds.objects.get(doc_id = doc_id).ad_id3
+
+    if ad_id1 != 0:
+        adobj1 = Advertisement.objects.get(id = ad_id1)
+    else:
+        adobj1 = None
+    if ad_id2 != 0:
+        adobj2 = Advertisement.objects.get(id = ad_id2)
+    else:
+        adobj2 = None
+    if ad_id3 != 0:
+        adobj3 = Advertisement.objects.get(id = ad_id3)
+    else:
+        adobj3 = None
+
+    print(adobj1)
+    print(adobj2)
+
+    return render(request,'showDetails.html',{'doc_objs':doc_objs,'notify_objs':notify_objs,'fileobj':fileobj, 'adobj1':adobj1, 'adobj2':adobj2, 'adobj3':adobj3})
 
 @login_required
 def expiringDocs(request):
@@ -420,10 +440,12 @@ def purchaseICslot1(request):
         adobjs = InAppAds.objects.filter(ad_id1=0,category=category)
         ad_details = Advertisement.objects.get(id=ad_id)
         curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + (slots * 3)
+        ad_details.amount_spend = newspend
         newadcount = curr_adcount + slots
         ad_details.publish_count = newadcount
         newbalance = currbalance - (slots*3)
-        print(slots*3)
         curr_data = WalletBalance.objects.get(user_id=user_id)
         curr_purchase = curr_data.total_ads
         curr_spend = curr_data.total_spend
@@ -445,6 +467,7 @@ def purchaseICslot1(request):
         curr_data.save()
         ad_details.save()
         print("slots purchased")
+        messages.info(request,'slots purchased')
         return redirect('iCategoryslots')
 
 
@@ -460,13 +483,16 @@ def purchaseICslot2(request):
     if cat_count < slots:
         messages.info(request,'No Enough Slots available')
         return redirect('iCategoryslots')
-    elif currbalance < (slots*3):
+    elif currbalance < (slots*2):
         messages.info(request,'Balance too low')
         return redirect('iCategoryslots')
     else:
         adobjs = InAppAds.objects.filter(ad_id2=0,category=category)
         ad_details = Advertisement.objects.get(id=ad_id)
         curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + (slots * 2)
+        ad_details.amount_spend = newspend
         newadcount = curr_adcount + slots
         ad_details.publish_count = newadcount
         newbalance = currbalance - (slots*2)
@@ -491,6 +517,7 @@ def purchaseICslot2(request):
         curr_data.save()
         ad_details.save()
         print("slots purchased")
+        messages.info(request,'slots purchased')
         return redirect('iCategoryslots')
 
 @login_required
@@ -511,6 +538,9 @@ def purchaseICslot3(request):
         adobjs = InAppAds.objects.filter(ad_id3=0,category=category)
         ad_details = Advertisement.objects.get(id=ad_id)
         curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + slots
+        ad_details.amount_spend = newspend
         newadcount = curr_adcount + slots
         ad_details.publish_count = newadcount
         newbalance = currbalance - slots
@@ -535,4 +565,5 @@ def purchaseICslot3(request):
         curr_data.save()
         ad_details.save()
         print("slots purchased")
+        messages.info(request,'slots purchased')
         return redirect('iCategoryslots')
