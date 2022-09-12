@@ -204,7 +204,13 @@ def expiringDocs(request):
 
 @login_required
 def empHome(request):
-    return render(request,'empHome.html')
+    args = {}
+    args['business_count'] = User.objects.filter(last_name='business').count()
+    args['total_users'] = User.objects.all().count()
+    args['total_ads'] = Advertisement.objects.all().count()
+    args['inapp_slots'] = InAppAds.objects.all().count() * 3
+    args['notify_slots'] = NotifyAds.objects.all().count() * 3
+    return render(request,'empHome.html',{'args' : args})
 
 @login_required
 def addBusiness(request):
@@ -247,7 +253,24 @@ def businessInfo(request):
         if user is not None:
             user_id = user.id
             transactions = Wallet.objects.filter(user_id=user_id)
-            return render(request,'businessDetails.html',{'user' : user,'transactions' : transactions})
+
+            args = {}
+
+            balance = WalletBalance.objects.get(user_id=user_id).balance
+            total_purchase = WalletBalance.objects.get(user_id=user_id).total_ads
+            total_spend = WalletBalance.objects.get(user_id=user_id).total_spend
+            Iad_count = Advertisement.objects.filter(user_id=user_id,ad_type='inapp').count()
+            Nad_count = Advertisement.objects.filter(user_id=user_id,ad_type='notify').count()
+            total_ads = Iad_count+Nad_count
+
+            args['Iad_count'] = Iad_count
+            args['Nad_count'] = Nad_count
+            args['total_ads'] = total_ads
+            args['balance'] = balance
+            args['total_purchase'] = total_purchase
+            args['total_spend'] = total_spend
+
+            return render(request,'businessDetails.html',{'user' : user,'transactions' : transactions, 'args':args})
         else:
             messages.info(request,'No email match found')
             return redirect('businessInfo')
@@ -618,3 +641,7 @@ def businessReport(request):
         'subcat_reportobjs' : subcat_reportobjs,
     }
     return render(request,'businessReport.html',context)
+
+@login_required
+def businessManual(request):
+    return render(request,'businessManual.html')

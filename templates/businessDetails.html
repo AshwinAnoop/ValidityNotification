@@ -20,7 +20,8 @@
     <div class="card p-3 col-4 mx-auto">
         <p> <b style="color: red;"> Username : </b>{{user.username}}</p>
         <p> <b style="color: red;"> Email : </b>{{user.email}}</p>
-        <p> <b style="color: red;"> Business Type : </b>{{user.last_name}}</p>
+        <p> <b style="color: red;"> Business Type : </b>{{user.first_name}}</p>
+        <p> <b style="color: red;"> Wallet Balance : </b>{{args.balance}} rs</p>
     </div>
 
 </div>
@@ -50,11 +51,15 @@
 
 <div class="mt-5 ">
     <div class="d-flex justify-content-center">
-        <h3>Business Spends</h3>
+        <h3>Advertisement Info</h3>
     </div>
 
     <div class="card p-3 col-4 mx-auto">
-
+        <p> <b style="color: red;"> Slots Purchased : </b>{{args.total_purchase}} slots purchased</p>
+        <p> <b style="color: red;"> Money Spend : </b>{{args.total_spend}} rs</p>
+        <p> <b style="color: red;"> In App Ads : </b>{{args.Iad_count}} ads active</p>
+        <p> <b style="color: red;"> Notification Ads : </b>{{args.Nad_count}} ads active</p>
+        <p> <b style="color: red;"> Total Advertisements : </b>{{args.total_ads}} ads active</p>
     </div>
 
 </div>

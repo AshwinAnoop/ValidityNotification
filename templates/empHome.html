@@ -4,38 +4,52 @@
 {% block content %}
 
 
-<div class="main-block m-5">
+
+<div class="container d-flex m-5">
 
 
-    <div class="col-2 card text-white bg-dark m-5 card-wrapper h-25">
 
-        <div>
+    <div class="col-3 card text-white bg-dark m-5 card-wrapper h-25" >
+
+        <div style="height: 10vh;">
             <h1 class="card-title"><a href="/addBusiness" style="color: aliceblue;">Add Business</a> </h1>
         </div>
     </div>
 
-    <div class="col-2 card text-white bg-dark m-5 card-wrapper h-25">
+    <div class="col-3 card text-white bg-dark m-5 card-wrapper h-25">
 
-        <div>
+        <div style="height: 10vh;">
             <h1 class="card-title"><a href="/businessInfo" style="color: aliceblue;">Business info</h1>
         </div>
     </div>
 
 
-    <div class="col-2 card text-white bg-dark m-5 card-wrapper h-25">
+    <div class="col-3 card text-white bg-dark m-5 card-wrapper h-25">
 
-        <div>
+        <div style="height: 10vh;">
             <h1 class="card-title"><a href="#" style="color: aliceblue;">Manage users</a> </h1>
         </div>
     </div>
 
-    <div class="col-2 card text-white bg-dark m-5 card-wrapper h-25">
+    <div class="col-3 card text-white bg-dark m-5 card-wrapper h-25">
 
-        <div>
-            <h1 class="card-title"><a href="#" style="color: aliceblue;">Show Reports</a> </h1>
+        <div style="height: 10vh;">
+            <h1 class="card-title"><a href="#" style="color: aliceblue;">Support</a> </h1>
         </div>
     </div>
 
+
+
+
 </div>
-    
+<div class="row">
+    <div class="card p-3 col-6 mx-auto">
+        <p> <b style="color: red;"> No of business listed : </b> {{args.business_count}} </p>
+        <p> <b style="color: red;"> Total App users : </b> {{args.total_users}} </p>
+        <p> <b style="color: red;"> Advertisement Created : </b> {{args.total_ads}} </p>
+        <p> <b style="color: red;"> InApp Slots Active : </b> {{args.inapp_slots}} </p>
+        <p> <b style="color: red;"> Notification slots active : </b> {{args.notify_slots}} </p>
+
+    </div>
+</div>
 {% endblock content %}

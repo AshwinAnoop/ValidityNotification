@@ -16,6 +16,9 @@ class Document(models.Model):
     no_of_files = models.IntegerField(default=0)
     feedback = models.TextField(null=True)
 
+    def __str__(self):
+        return "{} : {}({})".format(self.user_id, self.doc_name, self.id)
+
 class Notification(models.Model):
     doc_id = models.IntegerField()
     notify_date = models.DateField()

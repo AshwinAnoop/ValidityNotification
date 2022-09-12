@@ -19,6 +19,9 @@ from django.conf.urls import include
 from django.conf import settings 
 from django.conf.urls.static import static 
 
+admin.site.site_header = 'DocuSafe Admin'
+admin.site.site_title = 'DocuSafe Admin'
+
 urlpatterns = [
     path('',include('vns.urls')),
     path('admin/', admin.site.urls),
