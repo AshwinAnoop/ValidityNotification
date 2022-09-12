@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<section>
+
+    <h2 class="text-center mt-3 pb-3">Upcoming Notifications</h2>
+
+
+    <div>
+        {% for message in messages %}
+        <h3 style="color:Tomato;">{{message}}</h3>
+        {% endfor %}
+    </div>
+
+    
+    <div class="container mt-5">
+        <div class="row">
+
+            <table class="table table-hover table-dark">
+                <thead>
+                  <tr>
+                    
+                    <th scope="col"><b style="color: yellow;">Document Name </b></th>
+                    <th scope="col"><b style="color: yellow;">Date </b></th>
+
+
+                  </tr>     
+                </thead>
+                <tbody>
+
+                {% for noti in notifies %}
+                
+                  <tr>
+                    {% for key, value in noti.items %}
+                    <td>{{key}}</td>
+                    <td>{{value}} </td>
+                    {% endfor %}
+
+                  </tr>
+
+                {% endfor %}
+                </tbody>
+              </table>
+
+        </div>
+    </div>
+
+
+</section>
+
+   
+
+{% endblock content %}

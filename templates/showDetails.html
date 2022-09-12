@@ -68,12 +68,13 @@
                     <h6><b style="color: red;">{{notify.notify_date}}  </b></h6>
                 </div>
 
+
+
                 {% endfor %}
 
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                <a class="btn btn-primary" href="/addNotification/?document={{docobj.id}}">
                     Add Notifications
-                </button>
+                </a>
 
 
 

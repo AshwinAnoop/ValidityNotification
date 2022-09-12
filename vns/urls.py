@@ -32,5 +32,10 @@ urlpatterns = [
     path('purchases',views.purchases, name='purchases'),
     path('businessReport',views.businessReport, name='businessReport'),
     path('businessManual',views.businessManual, name='businessManual'),
+    path('purchaseNCslot1',views.purchaseNCslot1, name='purchaseNCslot1'),
+    path('nCategoryslots',views.nCategoryslots, name='nCategoryslots'),
+    path('addNotification/',views.addNotification,name='addNotification'),
+    path('addNotification',views.addNotification,name='addNotification'),
+    path('upcomingNotification',views.upcomingNotification,name='upcomingNotification'),
     
 ]

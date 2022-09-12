@@ -8,7 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from datetime import datetime, timedelta
 import stripe #to use stripe as payment gateway
 from django.conf import settings
-
+from django.core.mail import send_mail
 
 # Create your views here.
 def index(request):
@@ -66,6 +66,65 @@ def register(request):
 
 @login_required
 def home(request):
+    #checking email delivery
+    checkDate = datetime.now().date() + timedelta(days=1)
+    awaiting_notify = Notification.objects.filter(notify_date__lte = checkDate,is_notified = False)
+    for x in awaiting_notify:
+        notify_id = x.id
+        doc_id = x.doc_id
+        docname = Document.objects.get(id=doc_id).doc_name
+        doccat = Document.objects.get(id=doc_id).category
+        docsubcat = Document.objects.get(id=doc_id).sub_category
+        doctype =Document.objects.get(id=doc_id).doc_type
+        docfeedback = Document.objects.get(id=doc_id).feedback
+        docexpiry = Document.objects.get(id=doc_id).end_date
+
+        ad_id1 = NotifyAds.objects.get(doc_id = doc_id).ad_id1
+        ad_id2 = NotifyAds.objects.get(doc_id = doc_id).ad_id2
+        ad_id3 = NotifyAds.objects.get(doc_id = doc_id).ad_id3
+
+        if ad_id1 != 0:
+            adobj1 = Advertisement.objects.get(id = ad_id1)
+        else:
+            adobj1 = None
+        if ad_id2 != 0:
+            adobj2 = Advertisement.objects.get(id = ad_id2)
+        else:
+            adobj2 = None
+        if ad_id3 != 0:
+            adobj3 = Advertisement.objects.get(id = ad_id3)
+        else:
+            adobj3 = None
+
+        if adobj1 or adobj2 or adobj3:
+            suggest_msg = '\n\n\nSmart Suggestions\n'
+            if adobj1 is not None:
+                suggest_msg += adobj1.ad_title+'\n'
+                suggest_msg += adobj1.ad_link+'\n'
+            if adobj2 is not None:
+                suggest_msg += adobj2.ad_title+'\n'
+                suggest_msg += adobj2.ad_link+'\n'
+            if adobj3 is not None:
+                suggest_msg += adobj3.ad_title+'\n'
+                suggest_msg += adobj3.ad_link+'\n'
+
+        subject = 'Validity Notification system - Validity Expiring on '+str(docexpiry)
+        message = 'Hi, thank you for registering with docusafe , this is a remainder notification\n'
+        message += 'Your Document named : '+docname+' under category '+doccat+'\n'
+        message += 'sub category : '+docsubcat+'\n'
+        message += 'Type of Document : '+doctype+'\n'
+        message += 'Feedback : '+docfeedback+'\n'
+        message += 'Valid till : '+str(docexpiry)+'\n'
+        message += 'This Document has generated a alert notification\n\n\n'
+        message += suggest_msg
+
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['ashwinka999@gmail.com', ]
+        #send_mail( subject, message, email_from, recipient_list )
+
+
+
+
     return render(request,'home.html')
 
 def logout(request):
@@ -156,7 +215,7 @@ def addDocs(request):
 @login_required
 def viewDocs(request):
     userid = request.user.id
-    doc_objs = Document.objects.filter(user_id=userid)
+    doc_objs = Document.objects.filter(user_id=userid).order_by('-id')
     return render(request,'viewDocs.html',{'doc_objs':doc_objs})
 
 @login_required
@@ -446,6 +505,39 @@ def iCategoryslots(request):
     return render(request,'iCategoryslots.html',{'cobj1' : cobj1,'cobj2' : cobj2,'cobj3' : cobj3,'ads' : ads})
 
 @login_required
+def nCategoryslots(request):
+
+    user_id = request.user.id
+
+    categoryOpen1_query = NotifyAds.objects.filter(ad_id1=0).values_list('category',flat=True).distinct()
+    categoryOpen1 = list(categoryOpen1_query)
+    cobj1 = {}
+    for x in categoryOpen1:
+        cat_count = NotifyAds.objects.filter(ad_id1=0,category=x).count()
+        cobj1[x] = cat_count
+
+    categoryOpen2_query = NotifyAds.objects.filter(ad_id2=0).values_list('category',flat=True).distinct()
+    categoryOpen2 = list(categoryOpen2_query)
+    cobj2 = {}
+    for x in categoryOpen2:
+        cat_count = NotifyAds.objects.filter(ad_id2=0,category=x).count()
+        cobj2[x] = cat_count
+
+    categoryOpen3_query = NotifyAds.objects.filter(ad_id3=0).values_list('category',flat=True).distinct()
+    categoryOpen3 = list(categoryOpen3_query)
+    cobj3 = {}
+    for x in categoryOpen3:
+        cat_count = NotifyAds.objects.filter(ad_id3=0,category=x).count()
+        cobj3[x] = cat_count
+
+    
+    ads = Advertisement.objects.filter(user_id=user_id,ad_type='notify')
+
+    return render(request,'nCategoryslots.html',{'cobj1' : cobj1,'cobj2' : cobj2,'cobj3' : cobj3,'ads' : ads})
+
+
+
+@login_required
 def purchaseICslot1(request):
     user_id = request.user.id
     ad_id = request.POST['ad']
@@ -645,3 +737,91 @@ def businessReport(request):
 @login_required
 def businessManual(request):
     return render(request,'businessManual.html')
+
+
+
+@login_required
+def purchaseNCslot1(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    category = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = NotifyAds.objects.filter(ad_id1=0,category=category).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('nCategoryslots')
+    elif currbalance < (slots*3):
+        messages.info(request,'Balance too low')
+        return redirect('nCategoryslots')
+    else:
+        adobjs = NotifyAds.objects.filter(ad_id1=0,category=category)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + (slots * 3)
+        ad_details.amount_spend = newspend
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - (slots*3)
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots*3
+        total_ads = curr_purchase + n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id1 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        messages.info(request,'slots purchased')
+        return redirect('nCategoryslots')
+
+
+@login_required
+def addNotification(request):
+    if request.method == 'POST':
+        doc_id = request.POST['doc_id']
+        notify_date = request.POST['notifydate']
+        newnoti = Notification(doc_id=doc_id,notify_date=notify_date)
+        newnoti.save()
+        messages.info(request,'Notification Added')
+        return redirect('viewDocs')
+    else:
+        doc_id = request.GET.get('document')
+        return render(request,'addNotification.html',{'doc_id' : doc_id})
+
+@login_required
+def upcomingNotification(request):
+    user_id = request.user.id
+    docobj = {}
+    userdocs = Document.objects.filter(user_id=user_id)
+    docids = list(Document.objects.filter(user_id=user_id).values_list('id',flat=True))
+    print(docids)
+    for eachdoc in userdocs:
+        docid = eachdoc.id
+        docobj[docid] = eachdoc.doc_name
+    
+    notifyobjs = Notification.objects.filter(doc_id__in = docids).order_by('notify_date')
+
+    notifies = []
+
+    for noti in notifyobjs:
+        doc_id = noti.doc_id
+        arrobj = {}
+        arrobj[docobj[doc_id]] = noti.notify_date
+        notifies.append(arrobj)
+    
+    
+    return render(request,'upcomingNotification.html',{'notifies' : notifies})
