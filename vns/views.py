@@ -504,6 +504,68 @@ def iCategoryslots(request):
 
     return render(request,'iCategoryslots.html',{'cobj1' : cobj1,'cobj2' : cobj2,'cobj3' : cobj3,'ads' : ads})
 
+
+@login_required
+def iSCategoryslots(request):
+
+    user_id = request.user.id
+
+    categoryOpen1_query = InAppAds.objects.filter(ad_id1=0).values_list('sub_category',flat=True).distinct()
+    categoryOpen1 = list(categoryOpen1_query)
+    cobj1 = {}
+    for x in categoryOpen1:
+        cat_count = InAppAds.objects.filter(ad_id1=0,sub_category=x).count()
+        cobj1[x] = cat_count
+
+    categoryOpen2_query = InAppAds.objects.filter(ad_id2=0).values_list('sub_category',flat=True).distinct()
+    categoryOpen2 = list(categoryOpen2_query)
+    cobj2 = {}
+    for x in categoryOpen2:
+        cat_count = InAppAds.objects.filter(ad_id2=0,sub_category=x).count()
+        cobj2[x] = cat_count
+
+    categoryOpen3_query = InAppAds.objects.filter(ad_id3=0).values_list('sub_category',flat=True).distinct()
+    categoryOpen3 = list(categoryOpen3_query)
+    cobj3 = {}
+    for x in categoryOpen3:
+        cat_count = InAppAds.objects.filter(ad_id3=0,sub_category=x).count()
+        cobj3[x] = cat_count
+
+    
+    ads = Advertisement.objects.filter(user_id=user_id,ad_type='inapp')
+
+    return render(request,'iSCategoryslots.html',{'cobj1' : cobj1,'cobj2' : cobj2,'cobj3' : cobj3,'ads' : ads})
+
+@login_required
+def iDCategoryslots(request):
+    user_id = request.user.id
+
+    categoryOpen1_query = InAppAds.objects.filter(ad_id1=0).values_list('doc_type',flat=True).distinct()
+    categoryOpen1 = list(categoryOpen1_query)
+    cobj1 = {}
+    for x in categoryOpen1:
+        cat_count = InAppAds.objects.filter(ad_id1=0,doc_type=x).count()
+        cobj1[x] = cat_count
+
+    categoryOpen2_query = InAppAds.objects.filter(ad_id2=0).values_list('doc_type',flat=True).distinct()
+    categoryOpen2 = list(categoryOpen2_query)
+    cobj2 = {}
+    for x in categoryOpen2:
+        cat_count = InAppAds.objects.filter(ad_id2=0,doc_type=x).count()
+        cobj2[x] = cat_count
+
+    categoryOpen3_query = InAppAds.objects.filter(ad_id3=0).values_list('doc_type',flat=True).distinct()
+    categoryOpen3 = list(categoryOpen3_query)
+    cobj3 = {}
+    for x in categoryOpen3:
+        cat_count = InAppAds.objects.filter(ad_id3=0,doc_type=x).count()
+        cobj3[x] = cat_count
+
+    
+    ads = Advertisement.objects.filter(user_id=user_id,ad_type='inapp')
+
+    return render(request,'iDCategoryslots.html',{'cobj1' : cobj1,'cobj2' : cobj2,'cobj3' : cobj3,'ads' : ads})    
+
 @login_required
 def nCategoryslots(request):
 
@@ -683,6 +745,300 @@ def purchaseICslot3(request):
         messages.info(request,'slots purchased')
         return redirect('iCategoryslots')
 
+
+@login_required
+def purchaseISCslot1(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    sub_category = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id1=0,sub_category=sub_category).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iSCategoryslots')
+    elif currbalance < (slots*3):
+        messages.info(request,'Balance too low')
+        return redirect('iSCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id1=0,sub_category=sub_category)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + (slots * 3)
+        ad_details.amount_spend = newspend
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - (slots*3)
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots*3
+        total_ads = curr_purchase + n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id1 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        messages.info(request,'slots purchased')
+        return redirect('iSCategoryslots')
+
+
+@login_required
+def purchaseISCslot2(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    sub_category = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id2=0,sub_category=sub_category).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iSCategoryslots')
+    elif currbalance < (slots*2):
+        messages.info(request,'Balance too low')
+        return redirect('iSCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id2=0,sub_category=sub_category)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + (slots * 2)
+        ad_details.amount_spend = newspend
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - (slots*2)
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots*2
+        total_ads = curr_purchase + n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id2 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        messages.info(request,'slots purchased')
+        return redirect('iSCategoryslots')
+
+@login_required
+def purchaseISCslot3(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    sub_category = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id3=0,sub_category=sub_category).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iSCategoryslots')
+    elif currbalance < slots:
+        messages.info(request,'Balance too low')
+        return redirect('iSCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id3=0,sub_category=sub_category)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + slots
+        ad_details.amount_spend = newspend
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - slots
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots
+        total_ads = curr_purchase+n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id3 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        messages.info(request,'slots purchased')
+        return redirect('iSCategoryslots')
+
+
+@login_required
+def purchaseIDCslot1(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    doc_type = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id1=0,doc_type=doc_type).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iDCategoryslots')
+    elif currbalance < (slots*3):
+        messages.info(request,'Balance too low')
+        return redirect('iDCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id1=0,doc_type=doc_type)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + (slots * 3)
+        ad_details.amount_spend = newspend
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - (slots*3)
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots*3
+        total_ads = curr_purchase + n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id1 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        messages.info(request,'slots purchased')
+        return redirect('iDCategoryslots')
+
+@login_required
+def purchaseIDCslot2(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    doc_type = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id2=0,doc_type=doc_type).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iDCategoryslots')
+    elif currbalance < (slots*2):
+        messages.info(request,'Balance too low')
+        return redirect('iDCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id2=0,doc_type=doc_type)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + (slots * 2)
+        ad_details.amount_spend = newspend
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - (slots*2)
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots*2
+        total_ads = curr_purchase + n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id2 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        messages.info(request,'slots purchased')
+        return redirect('iDCategoryslots')
+
+
+@login_required
+def purchaseIDCslot3(request):
+    user_id = request.user.id
+    ad_id = request.POST['ad']
+    doc_type = request.POST['category']
+    slots = int(request.POST['noofslots'])
+    cat_count = InAppAds.objects.filter(ad_id3=0,doc_type=doc_type).count()
+    currbalance = WalletBalance.objects.get(user_id=user_id).balance
+    if cat_count < slots:
+        messages.info(request,'No Enough Slots available')
+        return redirect('iDCategoryslots')
+    elif currbalance < slots:
+        messages.info(request,'Balance too low')
+        return redirect('iDCategoryslots')
+    else:
+        adobjs = InAppAds.objects.filter(ad_id3=0,doc_type=doc_type)
+        ad_details = Advertisement.objects.get(id=ad_id)
+        curr_adcount = ad_details.publish_count
+        curr_adspend = ad_details.amount_spend
+        newspend = curr_adspend + slots
+        ad_details.amount_spend = newspend
+        newadcount = curr_adcount + slots
+        ad_details.publish_count = newadcount
+        newbalance = currbalance - slots
+        curr_data = WalletBalance.objects.get(user_id=user_id)
+        curr_purchase = curr_data.total_ads
+        curr_spend = curr_data.total_spend
+        n_purchases = slots
+        n_spend = slots
+        total_ads = curr_purchase+n_purchases
+        total_spend = curr_spend + n_spend
+        loopcount = 0
+        for ad in adobjs:
+            ad.ad_id3 = ad_id
+            ad.save()
+            loopcount+=1
+            if loopcount == slots:
+                break
+        
+        curr_data.balance = newbalance
+        curr_data.total_ads = total_ads
+        curr_data.total_spend = total_spend
+        curr_data.save()
+        ad_details.save()
+        print("slots purchased")
+        messages.info(request,'slots purchased')
+        return redirect('iDCategoryslots')
+
+
+
 @login_required
 def purchases(request):
     user_id = request.user.id
@@ -808,7 +1164,6 @@ def upcomingNotification(request):
     docobj = {}
     userdocs = Document.objects.filter(user_id=user_id)
     docids = list(Document.objects.filter(user_id=user_id).values_list('id',flat=True))
-    print(docids)
     for eachdoc in userdocs:
         docid = eachdoc.id
         docobj[docid] = eachdoc.doc_name

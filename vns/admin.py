@@ -62,5 +62,5 @@ class NotifyAdsAdmin(ModelAdmin):
 @register(InAppAds)
 class InAppAdsAdmin(ModelAdmin):
     icon_name = 'add_alert'
-    list_display = ('id','doc_id','category','sub_category','ad_id1','ad_id2','ad_id3')
+    list_display = ('id','doc_id','category','sub_category','doc_type','ad_id1','ad_id2','ad_id3')
     list_filter = ('doc_id','category','sub_category','ad_id1','ad_id2','ad_id3')
