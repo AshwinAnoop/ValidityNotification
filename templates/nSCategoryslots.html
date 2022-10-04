@@ -1,0 +1,204 @@
+{% extends 'businessBase.html' %}
+
+
+{% block content %}
+
+
+<h2 class="text-center mt-3 pb-3">Sub Category Wise E-Mail Notification Slots</h2>
+
+<div>
+    {% for message in messages %}
+    <h4 class="text-danger">{{message}}</h4>
+    {% endfor %}
+</div>
+
+<div class="container">
+
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    Primary Slot ( Spend 3rs Per Ad )
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="add-doc card-wrapper mt-5">
+                        <form class="col-5" action="purchaseNSCslot1" method="post">
+
+                            {% csrf_token %}
+
+
+                            <div class="mb-3">
+                                <label for="ad" class="form-label">Choose Ad</label>
+                                <select class="form-select" id="ad" name="ad" required>
+                                    <option value="">Select Ad to Publish</option>
+                                    {% for ad in ads %}
+                                    <option value="{{ad.id}}">{{ad.ad_name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+                                <label for="category" class="form-label">View Sub Category wise availability</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Choose subcategory</option>
+                                    {% for key, value in cobj1.items %}
+                                    <option value="{{ key }}">{{ key }} - Slots Available : {{ value }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+
+                            <div class="mb-3">
+                                <label for="noofslots" class="form-label">No of Slots to purchase</label>
+                                <input type="number" class="form-control" id="noofslots" name="noofslots" required>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary">Purchase</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Secondary Slot ( Spend 2rs Per Ad )
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="add-doc card-wrapper mt-5">
+                        <form class="col-5" action="purchaseNSCslot2" method="post">
+
+                            {% csrf_token %}
+
+
+                            <div class="mb-3">
+                                <label for="ad" class="form-label">Choose Ad</label>
+                                <select class="form-select" id="ad" name="ad" required>
+                                    <option value="">Select Ad to Publish</option>
+                                    {% for ad in ads %}
+                                    <option value="{{ad.id}}">{{ad.ad_name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+                                <label for="category" class="form-label">View Sub Category wise availability</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Choose subcategory</option>
+                                    {% for key, value in cobj2.items %}
+                                    <option value="{{ key }}">{{ key }} - Slots Available : {{ value }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+
+                            <div class="mb-3">
+                                <label for="noofslots" class="form-label">No of Slots to purchase</label>
+                                <input type="number" class="form-control" id="noofslots" name="noofslots" required>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary">Purchase</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Tertiary Slot ( Spend 1rs Per Ad )
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+
+
+                    <div class="add-doc card-wrapper mt-5">
+                        <form class="col-5" action="purchaseNSCslot3" method="post">
+
+                            {% csrf_token %}
+
+
+                            <div class="mb-3">
+                                <label for="ad" class="form-label">Choose Ad</label>
+                                <select class="form-select" id="ad" name="ad" required>
+                                    <option value="">Select Ad to Publish</option>
+                                    {% for ad in ads %}
+                                    <option value="{{ad.id}}">{{ad.ad_name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+                                <label for="category" class="form-label">View Sub Category wise availability</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Choose subcategory</option>
+                                    {% for key, value in cobj3.items %}
+                                    <option value="{{ key }}">{{ key }} - Slots Available : {{ value }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+
+
+
+                            <div class="mb-3">
+                                <label for="noofslots" class="form-label">No of Slots to purchase</label>
+                                <input type="number" class="form-control" id="noofslots" name="noofslots" required>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary">Purchase</button>
+                        </form>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock content %}
