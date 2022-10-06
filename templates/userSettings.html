@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<section>
+
+    <h2 class="text-center mt-3 pb-3">Update user Profile</h2>
+
+    <div>
+        {% for message in messages %}
+        <h4 class="text-danger">{{message}}</h4>
+        {% endfor %}
+    </div>
+    
+    <div class="container">
+    
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne">
+                        Show User Details
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="add-doc card-wrapper mt-5">
+    
+                            <ul class="list-group">
+                                <li class="list-group-item border-0"><b>Username : </b>{{ user.username }}</li>
+                                <li class="list-group-item border-0"><b>User ID : </b> {{ user.id }}</li>
+                                <li class="list-group-item border-0"><b>Email : </b>{{ user.email }}</li>
+                                <li class="list-group-item border-0"><b>Date Joined : </b>{{ user.date_joined }}</li>
+                                <li class="list-group-item border-0"><b>Last login : </b>{{ user.last_login }}</li>
+                            </ul>
+    
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Change Email ID
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="add-doc card-wrapper mt-5">
+                            <form class="col-5" action="updateEmail" method="post">
+    
+                                {% csrf_token %}
+    
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Enter new email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="remail" class="form-label">Retype new email</label>
+                                    <input type="email" class="form-control" id="remail" name="remail" required>
+                                </div>
+    
+    
+                                <button type="submit" class="btn btn-primary">Update Email</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Change Password
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+    
+    
+    
+                        <div class="add-doc card-wrapper mt-5">
+                            <form class="col-5" action="#" method="post">
+    
+                                {% csrf_token %}
+    
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Enter new passowrd</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="rpassword" class="form-label">Retype new password</label>
+                                    <input type="password" class="form-control" id="rpassword" name="rpassword" required>
+                                </div>
+    
+    
+                                <button type="submit" class="btn btn-primary">Update password</button>
+                            </form>
+                        </div>
+    
+    
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+
+
+</section>
+
+
+{% endblock content %}

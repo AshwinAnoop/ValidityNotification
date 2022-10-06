@@ -252,6 +252,41 @@
     
                         <div class="add-doc card-wrapper mt-5">
 
+                          <table class="table table-hover table-dark">
+                            <thead>
+                              <tr>
+                                
+                                <th scope="col"><b style="color: yellow;">Document type </b></th>
+                                <th scope="col"><b style="color: yellow;">Slot 1 ads </b></th>
+                                <th scope="col"><b style="color: yellow;">Slot 2 ads</b></th>
+                                <th scope="col"><b style="color: yellow;">Slot 3 ads</b></th>
+                                <th scope="col"><b style="color: yellow;">Total ads</b></th>
+            
+            
+                              </tr>     
+                            </thead>
+                            <tbody>
+            
+                            {% for doctype, value in doccat_reportobjs.items %}
+                            
+                              <tr>
+                                
+            
+                                <td>{{doctype}} </td>
+                                <td>{{value.0}}</td>
+                                <td>{{value.1}}</td>
+                                <td>{{value.2}}</td>
+                                <td>{{value.3}}</td>
+
+            
+            
+            
+                              </tr>
+            
+                            {% endfor %}
+                            </tbody>
+                          </table>
+
                         </div>
     
     

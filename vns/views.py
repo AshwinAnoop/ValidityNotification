@@ -1140,7 +1140,17 @@ def businessReport(request):
         arr = [scount1,scount2,scount3,totalslots]
         subcat_reportobjs[subcat] = arr
 
+    alldoccats = list(InAppAds.objects.filter(ad_id1__in = all_ads).values_list('doc_type',flat=True).distinct() | InAppAds.objects.filter(ad_id2__in = all_ads).values_list('doc_type',flat=True).distinct() | InAppAds.objects.filter(ad_id3__in = all_ads).values_list('doc_type',flat=True).distinct())
+    
+    doccat_reportobjs = {}
 
+    for doccat in alldoccats:
+        scount1 = InAppAds.objects.filter(doc_type=doccat,ad_id1__in = all_ads).count()
+        scount2 = InAppAds.objects.filter(doc_type=doccat,ad_id2__in = all_ads).count()
+        scount3 = InAppAds.objects.filter(doc_type=doccat,ad_id3__in = all_ads).count()
+        totalslots = scount1+scount2+scount3
+        arr = [scount1,scount2,scount3,totalslots]
+        doccat_reportobjs[subcat] = arr
 
     context = {
         'purchaseobjs' : purchaseobjs,
@@ -1149,14 +1159,52 @@ def businessReport(request):
         'emailobjs' : emailobjs,
         'cat_reportobjs' : cat_reportobjs,
         'subcat_reportobjs' : subcat_reportobjs,
+        'doccat_reportobjs' : doccat_reportobjs,
     }
     return render(request,'businessReport.html',context)
+
+@login_required
+def businessSettings(request):
+    userdetails = request.user
+    return render(request,'businessSettings.html',{'user' : userdetails})
+
+@login_required
+def updateBEmail(request):
+    if request.POST['email'] == request.POST['remail']:
+        user = User.objects.get(id=request.user.id)
+        user.email = request.POST['email']
+        user.save()
+        messages.info(request,'Email Updated')
+        return redirect('businessSettings')
+    else:
+        messages.info(request,'Two emails dont match')
+        return redirect('businessSettings')
 
 @login_required
 def businessManual(request):
     return render(request,'businessManual.html')
 
 
+@login_required
+def userManual(request):
+    return render(request,'userManual.html')
+
+@login_required
+def userSettings(request):
+    userdetails = request.user
+    return render(request,'userSettings.html',{'user' : userdetails})
+
+@login_required
+def updateEmail(request):
+    if request.POST['email'] == request.POST['remail']:
+        user = User.objects.get(id=request.user.id)
+        user.email = request.POST['email']
+        user.save()
+        messages.info(request,'Email Updated')
+        return redirect('userSettings')
+    else:
+        messages.info(request,'Two emails dont match')
+        return redirect('userSettings')
 
 @login_required
 def purchaseNCslot1(request):
