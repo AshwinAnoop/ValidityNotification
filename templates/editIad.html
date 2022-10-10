@@ -1,0 +1,51 @@
+{% extends 'businessBase.html' %}
+
+
+{% block content %}
+
+
+<h2 class="text-center m-3 pb-3">In App Advertisements</h2>
+
+<div>
+    {% for message in messages %}
+    <h4 class="text-danger">{{message}}</h4>
+    {% endfor %}
+</div>
+
+<div class="add-doc card-wrapper mt-5">
+    <form class="col-5" action="editIad" method="post">
+
+        {% csrf_token %}
+
+        <input type="hidden" name="ad_id" value="{{adobj.id}}">
+
+        <div class="mb-3">
+            <label for="ad_name" class="form-label">Advertisement Name</label>
+            <input type="text" class="form-control" id="ad_name" name="ad_name" value="{{adobj.ad_name}}" required>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="ad_title" class="form-label">Advertisement Title</label>
+            <input type="text" class="form-control" id="ad_title" name="ad_title" value="{{adobj.ad_title}}" required>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="ad_content" class="form-label">Advertisement Content</label>
+            <input type="text" class="form-control" id="aad_content" name="ad_content" value="{{adobj.ad_content}}" required>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="ad_link" class="form-label">Advertisement Link</label>
+            <input type="url" class="form-control" id="ad_link" name="ad_link" value="{{adobj.ad_link}}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Advertisement</button>
+    </form>
+</div>
+
+
+
+{% endblock content %}

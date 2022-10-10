@@ -60,5 +60,7 @@ urlpatterns = [
     path('addNotification/',views.addNotification,name='addNotification'),
     path('addNotification',views.addNotification,name='addNotification'),
     path('upcomingNotification',views.upcomingNotification,name='upcomingNotification'),
-    
+    path('userOverview',views.userOverview,name='userOverview'),
+    path('editIad',views.editIad,name='editIad'),
+    path('editNad',views.editNad,name='editNad'),
 ]

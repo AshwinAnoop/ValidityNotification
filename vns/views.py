@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import stripe #to use stripe as payment gateway
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db.models import Sum,Count
 
 # Create your views here.
 def index(request):
@@ -1685,3 +1686,85 @@ def upcomingNotification(request):
     
     
     return render(request,'upcomingNotification.html',{'notifies' : notifies})
+
+@login_required
+def userOverview(request):
+    args = {}
+    user = request.user
+    user_id = request.user.id
+
+    today = datetime.now().date()
+    weekdate = datetime.now().date() + timedelta(days=7)
+    monthdate = datetime.now().date() + timedelta(days=30)
+    sixmonth = datetime.now().date() + timedelta(days=183)
+
+    expiredDocs = Document.objects.filter(user_id=user_id,end_date__lte= today).count()
+    exinWeek = Document.objects.filter(user_id=user_id,end_date__range=[today, weekdate]).count()
+    exinMonth = Document.objects.filter(user_id=user_id,end_date__range=[weekdate, monthdate]).count()
+    exinSixMonth = Document.objects.filter(user_id=user_id,end_date__range=[monthdate, sixmonth]).count()
+    exinOneYr = Document.objects.filter(user_id=user_id,end_date__gte = sixmonth).count()
+
+    totalDocs = Document.objects.filter(user_id=user_id).count()
+    activeDocs = totalDocs - expiredDocs
+    totalUploads = Document.objects.filter(user_id=user_id).aggregate(Sum('no_of_files'))['no_of_files__sum']
+
+    #freqCategory = Document.objects.filter(user_id=user_id).values(category).annotate(fieldcount=Count(category)).order_by("-fieldcount")[0][category]
+
+    args['expiredDocs'] = expiredDocs
+    args['exinWeek'] = exinWeek
+    args['exinMonth'] = exinMonth
+    args['exinSixMonth'] = exinSixMonth
+    args['exinOneYr'] = exinOneYr
+    args['totalDocs'] = totalDocs
+    args['activeDocs'] = activeDocs
+    args['totalUploads'] = totalUploads
+    #args['freqCategory'] = freqCategory
+
+    return render(request,'userOverview.html',{'args' : args, 'user' : user})
+
+@login_required
+def editIad(request):
+    if request.method == 'POST':
+        ad_id = request.POST['ad_id']
+        ad_name = request.POST['ad_name']
+        ad_title = request.POST['ad_title']
+        ad_content = request.POST['ad_content']
+        ad_link = request.POST['ad_link']
+
+        curr_details = Advertisement.objects.get(id=ad_id)
+        curr_details.ad_name = ad_name
+        curr_details.ad_title = ad_title
+        curr_details.ad_content = ad_content
+        curr_details.ad_link = ad_link
+        curr_details.save()
+        messages.info(request,'Advertisement Edited')
+        return redirect('viewIad')
+
+    else:
+        ad_id = request.GET.get('id')
+        adobj = Advertisement.objects.get(id=ad_id)
+        return render(request,'editIad.html',{'adobj' : adobj})
+
+@login_required
+def editNad(request):
+    if request.method == 'POST':
+        ad_id = request.POST['ad_id']
+        ad_name = request.POST['ad_name']
+        ad_title = request.POST['ad_title']
+        ad_content = request.POST['ad_content']
+        ad_link = request.POST['ad_link']
+
+        curr_details = Advertisement.objects.get(id=ad_id)
+        curr_details.ad_name = ad_name
+        curr_details.ad_title = ad_title
+        curr_details.ad_content = ad_content
+        curr_details.ad_link = ad_link
+        curr_details.save()
+        messages.info(request,'Advertisement Edited')
+        return redirect('viewNad')
+
+    else:
+        ad_id = request.GET.get('id')
+        adobj = Advertisement.objects.get(id=ad_id)
+        return render(request,'editNad.html',{'adobj' : adobj})
+
