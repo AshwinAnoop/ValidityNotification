@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     #'django.contrib.admin',
+    'csvexport',
     'admin_numeric_filter',
     'material',
     'material.admin',
