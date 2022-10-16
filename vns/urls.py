@@ -63,4 +63,7 @@ urlpatterns = [
     path('userOverview',views.userOverview,name='userOverview'),
     path('editIad',views.editIad,name='editIad'),
     path('editNad',views.editNad,name='editNad'),
+    path('userInfo',views.userInfo,name='userInfo'),
+    path('manageUser',views.manageUser,name='manageUser'),
+    path('manageEmail',views.manageEmail,name='manageEmail'),
 ]

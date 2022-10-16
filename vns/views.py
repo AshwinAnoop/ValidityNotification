@@ -302,6 +302,23 @@ def addBusiness(request):
     else:
         return render(request,'addBusiness.html')
 
+
+@login_required
+def userInfo(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            userobj = User.objects.get(email = email)
+        except User.DoesNotExist:
+            userobj = None
+        if userobj is not None:
+            return render(request,'manageUser.html',{'userobj' : userobj})
+        else:
+            messages.info(request,'No email match found')
+            return redirect('userInfo')
+    else:
+        return render(request,'userInfo.html')
+
 @login_required
 def businessInfo(request):
     if request.method == 'POST':
@@ -1170,6 +1187,13 @@ def businessSettings(request):
     return render(request,'businessSettings.html',{'user' : userdetails})
 
 @login_required
+def manageUser(request):
+    email = request.POST['email']
+    userdetails = User.objects.get(email=email)
+    return render(request,'manageUser.html',{'user' : userdetails})
+
+
+@login_required
 def updateBEmail(request):
     if request.POST['email'] == request.POST['remail']:
         user = User.objects.get(id=request.user.id)
@@ -1206,6 +1230,19 @@ def updateEmail(request):
     else:
         messages.info(request,'Two emails dont match')
         return redirect('userSettings')
+
+@login_required
+def manageEmail(request):
+    if request.POST['email'] == request.POST['remail']:
+        userid = request.POST['id']
+        user = User.objects.get(id=userid)
+        user.email = request.POST['email']
+        user.save()
+        messages.info(request,'Email Updated')
+        return redirect('userInfo')
+    else:
+        messages.info(request,'Two emails dont match')
+        return redirect('userInfo')
 
 @login_required
 def purchaseNCslot1(request):
